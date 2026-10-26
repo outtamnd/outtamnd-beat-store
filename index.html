@@ -37,9 +37,6 @@
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white">
 
-    <!-- Native Audio Element for Mobile/Web Browser Compatibility -->
-    <audio id="html-audio-element" preload="none"></audio>
-
     <!-- Top Navigation -->
     <header class="sticky top-0 z-40 bg-darkbg/90 backdrop-blur-md border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -301,7 +298,7 @@
 
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/';
 
-        // Live Stripe Payment Link
+        // Live Stripe Payment Link configured
         const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
 
         let beats = [];
@@ -311,8 +308,8 @@
         let selectedLicenseType = 'MP3 Lease';
         let selectedLicensePrice = 25.00;
 
-        // Native DOM audio element for strict mobile browser policies
-        const audio = document.getElementById('html-audio-element');
+        // HTML5 Audio Engine Instance
+        const audio = new Audio();
 
         audio.addEventListener('timeupdate', () => {
             if (audio.duration) {
@@ -440,22 +437,14 @@
 
             currentBeat = beat;
             
-            // Normalize path separators (handles Windows backslashes) and encode URL segments
-            let rawFile = (beat.file || '').replace(/\\/g, '/');
-            if (rawFile.startsWith('/')) rawFile = rawFile.substring(1);
-
-            let audioPath = rawFile;
-            if (!rawFile.startsWith('http://') && !rawFile.startsWith('https://')) {
-                const encodedFile = rawFile.split('/').map(segment => encodeURIComponent(segment)).join('/');
-                audioPath = AUDIO_BASE_URL + encodedFile;
-            }
+            const encodedFile = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const audioPath = AUDIO_BASE_URL + encodedFile;
 
             audio.src = audioPath;
-            audio.load();
             audio.play().then(() => {
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
-                console.warn("Audio playback issue: Ensure file exists at " + audioPath, err);
+                console.warn("Audio playback issue: Ensure file exists at " + audioPath);
             });
         }
 
@@ -466,11 +455,8 @@
             }
 
             if (audio.paused) {
-                audio.play().then(() => {
-                    document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
-                }).catch(err => {
-                    console.warn("Playback error:", err);
-                });
+                audio.play();
+                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
@@ -570,7 +556,7 @@
                 return;
             }
 
-            // Redirects to live Stripe payment link
+            // Redirects to your live Stripe payment link
             window.location.href = STRIPE_CHECKOUT_URL;
         }
     </script>
