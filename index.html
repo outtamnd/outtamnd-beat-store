@@ -430,7 +430,7 @@
 
             currentBeat = beat;
             
-            // Properly encode path segments so mobile browsers can read files with spaces/symbols
+            // Properly encode path segments for mobile
             const encodedPath = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
 
             audio.src = encodedPath;
@@ -438,6 +438,9 @@
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
                 console.warn("Mobile audio playback error:", err);
+                // DISPLAY THE EXACT ERROR ON MOBILE SCREEN FOR DEBUGGING:
+                document.getElementById('player-title').innerText = "Error: " + err.name;
+                document.getElementById('player-genre').innerText = err.message;
             });
         }
 
@@ -452,6 +455,8 @@
                     document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
                 }).catch(err => {
                     console.warn("Playback error:", err);
+                    document.getElementById('player-title').innerText = "Error: " + err.name;
+                    document.getElementById('player-genre').innerText = err.message;
                 });
             } else {
                 audio.pause();
