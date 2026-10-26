@@ -57,10 +57,13 @@
                 <a href="#beats" class="hover:text-accent transition">Beats</a>
                 <a href="#kits" class="hover:text-accent transition">Drum Kits</a>
                 <a href="#licensing" class="hover:text-accent transition">Licensing</a>
-                <a href="#contact" class="hover:text-accent transition">Contact</a>
+                <button onclick="openContactModal()" class="hover:text-accent transition text-left">Contact</button>
             </nav>
 
             <div class="flex items-center space-x-4">
+                <button onclick="openContactModal()" class="md:hidden p-2.5 rounded-xl bg-cardbg border border-gray-800 hover:border-accent transition text-gray-300">
+                    <i class="fa-solid fa-envelope text-accent"></i>
+                </button>
                 <button onclick="toggleCart()" class="relative p-2.5 rounded-xl bg-cardbg border border-gray-800 hover:border-accent transition flex items-center space-x-2 text-gray-300">
                     <i class="fa-solid fa-cart-shopping text-accent"></i>
                     <span id="cart-count" class="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
@@ -92,7 +95,7 @@
         </div>
     </section>
 
-    <!-- Main Content (Added pb-36 so sticky player never covers content) -->
+    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow w-full space-y-16 pb-36">
 
         <!-- Beats Section -->
@@ -162,28 +165,9 @@
 
     </main>
 
-    <!-- Footer / Contact Section -->
-    <footer id="contact" class="bg-cardbg/50 border-t border-gray-800 py-12 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-            <div>
-                <span class="text-lg font-bold text-white tracking-wider">OUTTAMND</span>
-                <p class="text-xs text-gray-500 mt-1">© 2026 Outtamnd Productions. All rights reserved.</p>
-            </div>
-            <div class="flex flex-wrap items-center justify-center md:justify-end gap-6 text-gray-300 text-sm font-medium">
-                <a href="https://instagram.com/outtamnd.mp3" target="_blank" class="hover:text-accent transition flex items-center space-x-2">
-                    <i class="fa-brands fa-instagram text-accent text-lg"></i>
-                    <span>@outtamnd.mp3</span>
-                </a>
-                <a href="https://x.com/0uttamnd" target="_blank" class="hover:text-accent transition flex items-center space-x-2">
-                    <i class="fa-brands fa-x-twitter text-accent text-lg"></i>
-                    <span>@0uttamnd</span>
-                </a>
-                <a href="mailto:outtamnd@gmail.com" class="hover:text-accent transition flex items-center space-x-2">
-                    <i class="fa-solid fa-envelope text-accent text-lg"></i>
-                    <span>outtamnd@gmail.com</span>
-                </a>
-            </div>
-        </div>
+    <!-- Footer -->
+    <footer class="bg-cardbg/50 border-t border-gray-800 py-8 text-center text-xs text-gray-500">
+        <p>© 2026 Outtamnd Productions. All rights reserved.</p>
     </footer>
 
     <!-- Persistent Bottom Sticky Audio Player Bar -->
@@ -224,6 +208,43 @@
                     <i class="fa-solid fa-volume-high text-sm"></i>
                     <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setVolume(this.value)" class="w-20 accent-accent cursor-pointer">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal Page -->
+    <div id="contact-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-800 rounded-2xl max-w-md w-full p-6 relative">
+            <button onclick="closeContactModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-accent/20 border border-accent/40 flex items-center justify-center text-accent text-xl mb-3">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Get in Touch</h3>
+                <p class="text-sm text-gray-400 mt-1">Direct inquiries, custom beat requests & placements.</p>
+            </div>
+            <div class="space-y-3">
+                <a href="mailto:outtamnd@gmail.com" class="p-3.5 rounded-xl bg-darkbg border border-gray-800 hover:border-accent transition flex items-center space-x-3 text-white group">
+                    <i class="fa-solid fa-envelope text-accent text-lg"></i>
+                    <div>
+                        <span class="block text-xs text-gray-400">Email</span>
+                        <span class="text-sm font-medium group-hover:text-accent transition">outtamnd@gmail.com</span>
+                    </div>
+                </a>
+                <a href="https://instagram.com/outtamnd.mp3" target="_blank" class="p-3.5 rounded-xl bg-darkbg border border-gray-800 hover:border-accent transition flex items-center space-x-3 text-white group">
+                    <i class="fa-brands fa-instagram text-accent text-lg"></i>
+                    <div>
+                        <span class="block text-xs text-gray-400">Instagram</span>
+                        <span class="text-sm font-medium group-hover:text-accent transition">@outtamnd.mp3</span>
+                    </div>
+                </a>
+                <a href="https://x.com/0uttamnd" target="_blank" class="p-3.5 rounded-xl bg-darkbg border border-gray-800 hover:border-accent transition flex items-center space-x-3 text-white group">
+                    <i class="fa-brands fa-x-twitter text-accent text-lg"></i>
+                    <div>
+                        <span class="block text-xs text-gray-400">X (Twitter)</span>
+                        <span class="text-sm font-medium group-hover:text-accent transition">@0uttamnd</span>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -375,21 +396,21 @@
 
             items.forEach(beat => {
                 const el = document.createElement('div');
-                // Updated padding and responsive spacing so mobile layout never overlaps or crowds text
-                el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-2 sm:gap-4 group";
+                // Stacked layout so long genre tags wrap cleanly and never get cut off
+                el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-3 group";
                 const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "25.00";
                 const displayTitle = getDisplayTitle(beat.title);
                 
                 el.innerHTML = `
-                    <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
+                    <div class="flex items-center space-x-3 min-w-0 flex-grow pr-2">
                         <button onclick="playBeat('${beat.id}')" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 border border-gray-800 group-hover:border-accent text-accent flex items-center justify-center flex-shrink-0 transition">
                             <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-xs sm:text-sm"></i>
                         </button>
                         <div class="min-w-0 flex-grow">
                             <h4 class="text-white font-bold text-xs sm:text-sm truncate">${displayTitle}</h4>
-                            <div class="flex items-center space-x-2 sm:space-x-3 text-[11px] sm:text-xs text-gray-400 mt-0.5 truncate">
-                                <span class="text-purple-400 font-medium uppercase truncate">${beat.genre}</span>
-                                <span>•</span>
+                            <div class="flex flex-wrap items-center gap-x-2 text-[11px] sm:text-xs text-gray-400 mt-0.5">
+                                <span class="text-purple-400 font-medium uppercase break-words">${beat.genre}</span>
+                                <span class="text-gray-600">•</span>
                                 <span class="flex-shrink-0">${beat.bpm} BPM</span>
                             </div>
                         </div>
@@ -483,6 +504,14 @@
 
         function setVolume(val) {
             audio.volume = val;
+        }
+
+        function openContactModal() {
+            document.getElementById('contact-modal').classList.remove('hidden');
+        }
+
+        function closeContactModal() {
+            document.getElementById('contact-modal').classList.add('hidden');
         }
 
         function openLicenseModal(id) {
