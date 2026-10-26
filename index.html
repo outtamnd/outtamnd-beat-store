@@ -351,13 +351,26 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Helper to get text after the dash for clean display titles
+        // Helper to get text after dash and strip trailing BPM numbers for display
         function getDisplayTitle(fullTitle) {
             const dashIdx = fullTitle.indexOf('-');
+            let cleanTitle = fullTitle;
             if (dashIdx !== -1 && dashIdx < fullTitle.length - 1) {
-                return fullTitle.substring(dashIdx + 1).trim();
+                cleanTitle = fullTitle.substring(dashIdx + 1).trim();
+            } else {
+                cleanTitle = fullTitle.trim();
             }
-            return fullTitle;
+            
+            // Remove trailing BPM numbers if present at the end
+            const words = cleanTitle.split(' ');
+            if (words.length > 1) {
+                const lastWord = words[words.length - 1];
+                if (!isNaN(lastWord) && lastWord.length <= 3) {
+                    words.pop();
+                    cleanTitle = words.join(' ').trim();
+                }
+            }
+            return cleanTitle;
         }
 
         function renderBeats(items) {
@@ -438,7 +451,7 @@
 
             audio.src = audioPath;
             audio.play().then(() => {
-                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
                 console.warn("Audio playback issue: Ensure file exists at " + audioPath);
             });
