@@ -92,8 +92,8 @@
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full space-y-16">
+    <!-- Main Content (Added pb-36 so sticky player never covers content) -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow w-full space-y-16 pb-36">
 
         <!-- Beats Section -->
         <section id="beats">
@@ -187,29 +187,29 @@
     </footer>
 
     <!-- Persistent Bottom Sticky Audio Player Bar -->
-    <div id="player-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-cardbg/95 backdrop-blur-md border-t border-gray-800 shadow-2xl px-4 py-3 hidden">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <div id="player-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-cardbg/95 backdrop-blur-md border-t border-gray-800 shadow-2xl px-3 sm:px-6 py-3 hidden">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
             <!-- Track Info -->
-            <div class="flex items-center space-x-3 w-1/4 min-w-0">
-                <div class="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 border border-gray-700">
-                    <i class="fa-solid fa-compact-disc text-accent text-xl animate-spin"></i>
+            <div class="flex items-center space-x-2 sm:space-x-3 w-[30%] sm:w-1/4 min-w-0">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 border border-gray-700">
+                    <i class="fa-solid fa-compact-disc text-accent text-base sm:text-xl animate-spin"></i>
                 </div>
                 <div class="min-w-0">
-                    <h4 id="player-title" class="text-sm font-bold text-white truncate">Select a Beat</h4>
-                    <p id="player-genre" class="text-xs text-purple-400 truncate">Outtamnd</p>
+                    <h4 id="player-title" class="text-xs sm:text-sm font-bold text-white truncate">Select a Beat</h4>
+                    <p id="player-genre" class="text-[10px] sm:text-xs text-purple-400 truncate">Outtamnd</p>
                 </div>
             </div>
 
             <!-- Controls & Progress -->
-            <div class="flex flex-col items-center w-2/4 max-w-xl">
-                <div class="flex items-center space-x-6 mb-1">
-                    <button class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-backward-step"></i></button>
-                    <button onclick="togglePlay()" id="play-pause-btn" class="w-10 h-10 rounded-full bg-accent hover:bg-accenthover text-white flex items-center justify-center shadow-md transition">
-                        <i id="play-icon" class="fa-solid fa-play text-sm"></i>
+            <div class="flex flex-col items-center w-[55%] sm:w-2/4 max-w-xl">
+                <div class="flex items-center space-x-4 sm:space-x-6 mb-1">
+                    <button class="text-gray-400 hover:text-white transition text-xs sm:text-sm"><i class="fa-solid fa-backward-step"></i></button>
+                    <button onclick="togglePlay()" id="play-pause-btn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-accent hover:bg-accenthover text-white flex items-center justify-center shadow-md transition">
+                        <i id="play-icon" class="fa-solid fa-play text-xs sm:text-sm"></i>
                     </button>
-                    <button class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-forward-step"></i></button>
+                    <button class="text-gray-400 hover:text-white transition text-xs sm:text-sm"><i class="fa-solid fa-forward-step"></i></button>
                 </div>
-                <div class="w-full flex items-center space-x-3 text-xs text-gray-400">
+                <div class="w-full flex items-center space-x-2 sm:space-x-3 text-[10px] sm:text-xs text-gray-400">
                     <span id="current-time">0:00</span>
                     <div class="flex-grow bg-gray-800 h-1.5 rounded-full overflow-hidden cursor-pointer" onclick="seekAudio(event)">
                         <div id="progress-bar" class="bg-accent h-full w-0 transition-all"></div>
@@ -299,10 +299,7 @@
     <script>
         const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
 
-        // Updated base URL pointing to your 'old-site' repository project pages
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/old-site/';
-
-        // Live Stripe Payment Link
         const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
 
         let beats = [];
@@ -356,7 +353,6 @@
                 cleanTitle = fullTitle.trim();
             }
             
-            // Remove trailing BPM numbers if present at the end
             const words = cleanTitle.split(' ');
             if (words.length > 1) {
                 const lastWord = words[words.length - 1];
@@ -379,27 +375,28 @@
 
             items.forEach(beat => {
                 const el = document.createElement('div');
-                el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-4 flex items-center justify-between gap-4 group";
+                // Updated padding and responsive spacing so mobile layout never overlaps or crowds text
+                el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-2 sm:gap-4 group";
                 const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "25.00";
                 const displayTitle = getDisplayTitle(beat.title);
                 
                 el.innerHTML = `
-                    <div class="flex items-center space-x-4 min-w-0">
-                        <button onclick="playBeat('${beat.id}')" class="w-12 h-12 rounded-xl bg-gray-900 border border-gray-800 group-hover:border-accent text-accent flex items-center justify-center flex-shrink-0 transition">
-                            <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-sm"></i>
+                    <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-grow pr-2">
+                        <button onclick="playBeat('${beat.id}')" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 border border-gray-800 group-hover:border-accent text-accent flex items-center justify-center flex-shrink-0 transition">
+                            <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-xs sm:text-sm"></i>
                         </button>
-                        <div class="min-w-0">
-                            <h4 class="text-white font-bold text-sm truncate">${displayTitle}</h4>
-                            <div class="flex items-center space-x-3 text-xs text-gray-400 mt-0.5">
-                                <span class="text-purple-400 font-medium uppercase">${beat.genre}</span>
+                        <div class="min-w-0 flex-grow">
+                            <h4 class="text-white font-bold text-xs sm:text-sm truncate">${displayTitle}</h4>
+                            <div class="flex items-center space-x-2 sm:space-x-3 text-[11px] sm:text-xs text-gray-400 mt-0.5 truncate">
+                                <span class="text-purple-400 font-medium uppercase truncate">${beat.genre}</span>
                                 <span>•</span>
-                                <span>${beat.bpm} BPM</span>
+                                <span class="flex-shrink-0">${beat.bpm} BPM</span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-4 flex-shrink-0">
-                        <span class="text-white font-bold text-sm sm:text-base">$${beatPrice}</span>
-                        <button onclick="openLicenseModal('${beat.id}')" class="px-4 py-2 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-semibold transition">
+                    <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+                        <span class="text-white font-bold text-xs sm:text-base">$${beatPrice}</span>
+                        <button onclick="openLicenseModal('${beat.id}')" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-semibold transition whitespace-nowrap">
                             Buy / License
                         </button>
                     </div>
@@ -441,7 +438,6 @@
 
             currentBeat = beat;
             
-            // Normalize path separators (handles Windows backslashes) and encode URL segments
             let rawFile = (beat.file || '').replace(/\\/g, '/');
             if (rawFile.startsWith('/')) rawFile = rawFile.substring(1);
 
@@ -570,8 +566,6 @@
                 alert("Your cart is empty!");
                 return;
             }
-
-            // Redirects to live Stripe payment link
             window.location.href = STRIPE_CHECKOUT_URL;
         }
     </script>
