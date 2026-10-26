@@ -22,10 +22,16 @@
                         sideflip: {
                             '0%': { transform: 'rotateY(0deg)' },
                             '100%': { transform: 'rotateY(360deg)' }
+                        },
+                        shine: {
+                            '0%': { transform: 'translateX(-150%) skewX(-20deg)' },
+                            '20%': { transform: 'translateX(150%) skewX(-20deg)' },
+                            '100%': { transform: 'translateX(150%) skewX(-20deg)' }
                         }
                     },
                     animation: {
-                        sideflip: 'sideflip 7s linear infinite'
+                        sideflip: 'sideflip 7s linear infinite',
+                        shine: 'shine 4s ease-in-out infinite'
                     }
                 }
             }
@@ -59,13 +65,18 @@
     <header class="sticky top-0 z-40 bg-darkbg/95 backdrop-blur-md border-b border-gray-900 shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- 3D Extruded Sideways Spinning Logo -->
+                <!-- 3D Metallic Extruded Spinning Logo with Shine -->
                 <a href="#" class="flex items-center perspective-container py-2">
                     <div class="relative animate-sideflip" style="transform-style: preserve-3d;">
-                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-10px); filter: brightness(0.05); opacity: 0.95;">
-                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-6px); filter: brightness(0.2); opacity: 0.95;">
-                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-2px); filter: brightness(0.4);">
-                        <img src="logo.png" alt="OUTTAMND" class="h-14 sm:h-18 w-auto object-contain relative select-none" style="transform: translateZ(0px);">
+                        <!-- 3D Depth Layers with smooth metallic tone -->
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-8px); filter: brightness(0.6) contrast(1.2); opacity: 0.85;">
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-4px); filter: brightness(0.8) contrast(1.2); opacity: 0.95;">
+                        <img src="logo.png" alt="OUTTAMND" class="h-14 sm:h-18 w-auto object-contain relative select-none" style="transform: translateZ(0px); filter: contrast(1.1);">
+                        
+                        <!-- Sweeping Metallic Shine Overlay -->
+                        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-md" style="transform: translateZ(2px);">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shine w-1/2"></div>
+                        </div>
                     </div>
                 </a>
             </div>
@@ -416,6 +427,7 @@
 
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/old-site/';
         const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
+        const MEDIAFIRE_DRUMKIT_URL = 'https://www.mediafire.com/file/brise7wzx7jg29z/%2521OUTTADRUMS_V1_OFFICIAL_DRUMKIT.zip/file';
 
         let beats = [];
         let cart = [];
@@ -662,7 +674,7 @@
         }
 
         function addKitToCart(name, price) {
-            cart.push({ name: name, price: price });
+            cart.push({ name: name, price: price, isKit: true });
             updateCartUI();
             toggleCart();
         }
@@ -751,7 +763,13 @@
                 alert("Your bag is empty!");
                 return;
             }
-            window.location.href = STRIPE_CHECKOUT_URL;
+            // Check if cart contains only the drumkit or if it's a mix, direct accordingly or use main link
+            const hasKitOnly = cart.length === 1 && cart[0].isKit;
+            if (hasKitOnly) {
+                window.location.href = MEDIAFIRE_DRUMKIT_URL;
+            } else {
+                window.location.href = STRIPE_CHECKOUT_URL;
+            }
         }
     </script>
 </body>
