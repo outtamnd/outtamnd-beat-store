@@ -440,7 +440,7 @@
 
             if (audio.paused) {
                 audio.play();
-                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
@@ -462,7 +462,7 @@
             activeModalBeat = beats.find(b => String(b.id) === String(id));
             if(!activeModalBeat) return;
             document.getElementById('modal-beat-title').innerText = `License: ${activeModalBeat.title}`;
-            document.getElementById('license-modal').classList.remove('hidden');
+            document.getElementById('license-modal').classList.add('hidden') ? null : document.getElementById('license-modal').classList.remove('hidden');
         }
 
         function closeLicenseModal() {
@@ -529,7 +529,7 @@
             totalEl.innerText = `$${total.toFixed(2)}`;
         }
 
-        function removeFromCard(index) {
+        function removeFromCart(index) {
             cart.splice(index, 1);
             updateCartUI();
         }
