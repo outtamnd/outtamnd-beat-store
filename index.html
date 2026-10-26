@@ -92,6 +92,7 @@
                 </a>
             </div>
 
+            <!-- Desktop Nav Links -->
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
                 <a href="#beats" class="hover:text-accent transition">Beats</a>
                 <a href="#kits" class="hover:text-accent transition">Drum Kits</a>
@@ -99,9 +100,10 @@
                 <button onclick="openContactModal()" class="hover:text-accent transition text-left">Contact</button>
             </nav>
 
-            <div class="flex items-center space-x-4">
-                <button onclick="openContactModal()" class="md:hidden p-2.5 rounded-xl bg-cardbg border border-gray-800 hover:border-accent transition text-gray-300">
-                    <i class="fa-solid fa-envelope text-accent"></i>
+            <!-- Actions (Mobile Menu + Cart) -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-cardbg border border-gray-800 hover:border-accent transition text-gray-300 shadow-inner">
+                    <i class="fa-solid fa-bars text-accent text-base"></i>
                 </button>
                 <button onclick="toggleCart()" class="relative p-2.5 rounded-xl bg-cardbg border border-gray-800 hover:border-accent transition flex items-center space-x-2 text-gray-300 shadow-inner">
                     <i class="fa-solid fa-cart-shopping text-accent"></i>
@@ -110,6 +112,35 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu-drawer" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col p-6">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-6">
+            <span class="text-lg font-black text-white flex items-center space-x-2">
+                <i class="fa-solid fa-bars text-accent"></i>
+                <span>Navigation</span>
+            </span>
+            <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="flex flex-col space-y-3 text-sm font-medium">
+            <a href="#beats" onclick="toggleMobileMenu()" class="p-4 rounded-xl bg-darkbg border border-gray-800 text-white hover:border-accent transition flex items-center justify-between shadow-inner">
+                <span>Beats Vault</span>
+                <i class="fa-solid fa-play text-accent text-xs"></i>
+            </a>
+            <a href="#kits" onclick="toggleMobileMenu()" class="p-4 rounded-xl bg-darkbg border border-gray-800 text-white hover:border-accent transition flex items-center justify-between shadow-inner">
+                <span>Drum Kits & Sound Banks</span>
+                <i class="fa-solid fa-drum text-accent text-xs"></i>
+            </a>
+            <button onclick="toggleMobileMenu(); openLicensingInfoModal();" class="p-4 rounded-xl bg-darkbg border border-gray-800 text-white hover:border-accent transition flex items-center justify-between text-left shadow-inner">
+                <span>Licensing Terms</span>
+                <i class="fa-solid fa-file-contract text-accent text-xs"></i>
+            </button>
+            <button onclick="toggleMobileMenu(); openContactModal();" class="p-4 rounded-xl bg-darkbg border border-gray-800 text-white hover:border-accent transition flex items-center justify-between text-left shadow-inner">
+                <span>Contact & Socials</span>
+                <i class="fa-solid fa-envelope text-accent text-xs"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="relative overflow-hidden py-16 lg:py-28 border-b border-gray-900 bg-gradient-to-b from-[#070a14] to-darkbg shadow-2xl">
@@ -693,6 +724,11 @@
         function toggleCart() {
             const drawer = document.getElementById('cart-drawer');
             drawer.classList.toggle('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu-drawer');
+            menu.classList.toggle('hidden');
         }
 
         function updateCartUI() {
