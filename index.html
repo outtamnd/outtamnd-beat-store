@@ -25,7 +25,7 @@
                         },
                         shine: {
                             '0%': { transform: 'translateX(-150%) skewX(-20deg)' },
-                            '20%': { transform: 'translateX(150%) skewX(-20deg)' },
+                            '25%': { transform: 'translateX(150%) skewX(-20deg)' },
                             '100%': { transform: 'translateX(150%) skewX(-20deg)' }
                         }
                     },
@@ -54,6 +54,17 @@
             background-image: radial-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 0);
             background-size: 24px 24px;
         }
+        /* True Alpha-Mask Shine so reflection only hits logo pixels */
+        .logo-shine-mask {
+            -webkit-mask-image: url('logo.png');
+            mask-image: url('logo.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+        }
     </style>
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white grunge-overlay">
@@ -65,17 +76,17 @@
     <header class="sticky top-0 z-40 bg-darkbg/95 backdrop-blur-md border-b border-gray-900 shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- 3D Metallic Extruded Spinning Logo with Shine -->
+                <!-- 3D Metallic Extruded Spinning Logo with Precise Pixel Mask Shine -->
                 <a href="#" class="flex items-center perspective-container py-2">
                     <div class="relative animate-sideflip" style="transform-style: preserve-3d;">
-                        <!-- 3D Depth Layers with smooth metallic tone -->
+                        <!-- 3D Depth Layers -->
                         <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-8px); filter: brightness(0.6) contrast(1.2); opacity: 0.85;">
                         <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-4px); filter: brightness(0.8) contrast(1.2); opacity: 0.95;">
                         <img src="logo.png" alt="OUTTAMND" class="h-14 sm:h-18 w-auto object-contain relative select-none" style="transform: translateZ(0px); filter: contrast(1.1);">
                         
-                        <!-- Sweeping Metallic Shine Overlay -->
-                        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-md" style="transform: translateZ(2px);">
-                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shine w-1/2"></div>
+                        <!-- Exact Shape Alpha Masked Reflection -->
+                        <div class="absolute inset-0 overflow-hidden pointer-events-none logo-shine-mask" style="transform: translateZ(2px);">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shine w-full"></div>
                         </div>
                     </div>
                 </a>
@@ -763,7 +774,6 @@
                 alert("Your bag is empty!");
                 return;
             }
-            // Check if cart contains only the drumkit or if it's a mix, direct accordingly or use main link
             const hasKitOnly = cart.length === 1 && cart[0].isKit;
             if (hasKitOnly) {
                 window.location.href = MEDIAFIRE_DRUMKIT_URL;
