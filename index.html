@@ -178,18 +178,26 @@
 
     </main>
 
-    <!-- Footer -->
+    <!-- Footer / Contact Section -->
     <footer id="contact" class="bg-cardbg/50 border-t border-gray-800 py-12 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
                 <span class="text-lg font-bold text-white tracking-wider">OUTTAMND</span>
                 <p class="text-xs text-gray-500 mt-1">© 2026 Outtamnd Productions. All rights reserved.</p>
             </div>
-            <div class="flex items-center space-x-6 text-gray-400">
-                <a href="#" class="hover:text-accent transition text-lg"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#" class="hover:text-accent transition text-lg"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="hover:text-accent transition text-lg"><i class="fa-brands fa-soundcloud"></i></a>
-                <a href="#" class="hover:text-accent transition text-lg"><i class="fa-brands fa-x-twitter"></i></a>
+            <div class="flex flex-wrap items-center justify-center md:justify-end gap-6 text-gray-300 text-sm font-medium">
+                <a href="https://instagram.com/outtamnd.mp3" target="_blank" class="hover:text-accent transition flex items-center space-x-2">
+                    <i class="fa-brands fa-instagram text-accent text-lg"></i>
+                    <span>@outtamnd.mp3</span>
+                </a>
+                <a href="https://x.com/0uttamnd" target="_blank" class="hover:text-accent transition flex items-center space-x-2">
+                    <i class="fa-brands fa-x-twitter text-accent text-lg"></i>
+                    <span>@0uttamnd</span>
+                </a>
+                <a href="mailto:outtamnd@gmail.com" class="hover:text-accent transition flex items-center space-x-2">
+                    <i class="fa-solid fa-envelope text-accent text-lg"></i>
+                    <span>outtamnd@gmail.com</span>
+                </a>
             </div>
         </div>
     </footer>
@@ -244,29 +252,29 @@
             <p class="text-sm text-gray-400 mb-6">Choose the rights that fit your project release.</p>
 
             <div class="space-y-3 mb-6">
-                <!-- MP3 Lease -->
-                <div onclick="selectLicenseOption('MP3 Lease', 29.99)" class="p-4 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group">
+                <!-- MP3 Lease ($25) -->
+                <div onclick="selectLicenseOption('MP3 Lease', 25.00)" class="p-4 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group">
                     <div>
                         <h4 class="font-bold text-white group-hover:text-accent transition">MP3 Lease</h4>
                         <p class="text-xs text-gray-400 mt-0.5">High Quality MP3 File • Up to 5,000 streams</p>
                     </div>
-                    <span class="text-lg font-bold text-white">$29.99</span>
+                    <span class="text-lg font-bold text-white">$25.00</span>
                 </div>
-                <!-- WAV Lease -->
-                <div onclick="selectLicenseOption('WAV Lease', 49.99)" class="p-4 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group">
+                <!-- WAV Lease ($50) -->
+                <div onclick="selectLicenseOption('WAV Lease', 50.00)" class="p-4 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group">
                     <div>
                         <h4 class="font-bold text-white group-hover:text-accent transition">WAV Lease</h4>
                         <p class="text-xs text-gray-400 mt-0.5">High Quality MP3 + WAV Files • Up to 15,000 streams</p>
                     </div>
-                    <span class="text-lg font-bold text-white">$49.99</span>
+                    <span class="text-lg font-bold text-white">$50.00</span>
                 </div>
-                <!-- Unlimited -->
-                <div onclick="selectLicenseOption('Unlimited Rights', 99.99)" class="p-4 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group">
+                <!-- Unlimited Rights ($100) -->
+                <div onclick="selectLicenseOption('Unlimited Rights', 100.00)" class="p-4 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group">
                     <div>
                         <h4 class="font-bold text-white group-hover:text-accent transition">Unlimited Rights</h4>
                         <p class="text-xs text-gray-400 mt-0.5">MP3, WAV + Track Stems • Unlimited Streams</p>
                     </div>
-                    <span class="text-lg font-bold text-white">$99.99</span>
+                    <span class="text-lg font-bold text-white">$100.00</span>
                 </div>
             </div>
             <button onclick="confirmLicensePurchase()" class="w-full py-3 rounded-xl bg-accent hover:bg-accenthover text-white font-semibold transition">
@@ -314,7 +322,7 @@
         let currentBeat = null;
         let activeModalBeat = null;
         let selectedLicenseType = 'MP3 Lease';
-        let selectedLicensePrice = 29.99;
+        let selectedLicensePrice = 25.00;
 
         // HTML5 Audio Engine Instance
         const audio = new Audio();
@@ -384,7 +392,7 @@
             items.forEach(beat => {
                 const el = document.createElement('div');
                 el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-4 flex items-center justify-between gap-4 group";
-                const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "29.99";
+                const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "25.00";
                 const displayTitle = getDisplayTitle(beat.title);
                 
                 el.innerHTML = `
