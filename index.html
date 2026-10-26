@@ -44,7 +44,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #1f2a40; border-radius: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #374151; }
         .perspective-container { perspective: 1200px; }
-        /* Gritty grunge overlay */
         .grunge-overlay {
             background-image: radial-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 0);
             background-size: 24px 24px;
@@ -156,7 +155,7 @@
                     <span class="w-3 h-3 rounded-full bg-accent inline-block shadow-[0_0_12px_#8b5cf6]"></span>
                     <span>Sound Kits & Drum Kits</span>
                 </h2>
-                <p class="text-sm text-gray-400 mt-1">Hard-hitting custom sound banks and FL Studio drum kits straight from the session files.</p>
+                <p class="text-sm text-gray-400 mt-1">Hard-hitting custom sound banks and FL Studio drum kits straight from session files.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -167,12 +166,12 @@
                             <i class="fa-solid fa-drum text-4xl text-accent drop-shadow-[0_0_10px_#8b5cf6]"></i>
                         </div>
                         <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">Expansion Kit</span>
-                        <h3 class="text-lg font-black text-white mt-1">OUTTADRUMS V1 OFFICIAL</h3>
+                        <h3 class="text-lg font-black text-white mt-1">!OUTTADRUMS V1 OFFICIAL DRUMKIT</h3>
                         <p class="text-sm text-gray-400 mt-2 leading-relaxed">Custom processed 808s, hard snares, claps, and custom melodic one-shots extracted directly from verified sessions.</p>
                     </div>
                     <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-800/80">
-                        <span class="text-xl font-black text-white">$29.99</span>
-                        <button onclick="addKitToCart('OUTTADRUMS V1 OFFICIAL', 29.99)" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-sm font-bold transition flex items-center space-x-2 shadow-lg shadow-purple-950/60">
+                        <span class="text-xl font-black text-white">$5.00</span>
+                        <button onclick="addKitToCart('!OUTTADRUMS V1 OFFICIAL DRUMKIT', 5.00)" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-sm font-bold transition flex items-center space-x-2 shadow-lg shadow-purple-950/60">
                             <i class="fa-solid fa-cart-plus"></i>
                             <span>Add to Bag</span>
                         </button>
@@ -239,7 +238,7 @@
                     <i class="fa-solid fa-file-contract"></i>
                 </div>
                 <h3 class="text-2xl font-black text-white">Licensing Terms & Rights</h3>
-                <p class="text-sm text-gray-400 mt-1">Review the audio formats and streaming rights for each tier.</p>
+                <p class="text-sm text-gray-400 mt-1">Review audio formats and streaming rights for each tier.</p>
             </div>
 
             <div class="space-y-4">
@@ -384,11 +383,21 @@
                     </h3>
                     <button onclick="toggleCart()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
-                <div id="cart-items" class="py-4 space-y-3 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                
+                <!-- Bundle Promotion Banner -->
+                <div class="my-3 p-3 rounded-xl bg-purple-950/30 border border-purple-800/40 text-purple-300 text-xs text-center font-medium shadow-inner">
+                    🔥 <strong class="text-white">Bundle Deals Active:</strong> Buy 2 Get 1 Free | Buy 3 Get 2 Free | Buy 4 Get 3 Free!
+                </div>
+
+                <div id="cart-items" class="py-2 space-y-3 overflow-y-auto max-h-[50vh] custom-scrollbar">
                     <p class="text-gray-500 text-sm text-center py-8">Your bag is empty.</p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-4">
+            <div class="border-t border-gray-800 pt-4 space-y-2">
+                <div id="discount-row" class="flex items-center justify-between text-xs text-purple-400 hidden">
+                    <span>Bundle Discount Applied:</span>
+                    <span id="discount-amount" class="font-bold">-$0.00</span>
+                </div>
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-sm text-gray-400">Total:</span>
                     <span id="cart-total" class="text-2xl font-black text-white">$0.00</span>
@@ -667,20 +676,56 @@
             const container = document.getElementById('cart-items');
             const countEl = document.getElementById('cart-count');
             const totalEl = document.getElementById('cart-total');
+            const discountRow = document.getElementById('discount-row');
+            const discountAmountEl = document.getElementById('discount-amount');
 
             countEl.innerText = cart.length;
 
             if(cart.length === 0) {
                 container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Your bag is empty.</p>';
                 totalEl.innerText = '$0.00';
+                discountRow.classList.add('hidden');
                 return;
             }
 
             container.innerHTML = '';
-            let total = 0;
+            
+            let sortedCart = [...cart].sort((a, b) => b.price - a.price);
+            let subtotal = 0;
+            let discount = 0;
+
+            sortedCart.forEach(item => {
+                subtotal += item.price;
+            });
+
+            let itemCount = sortedCart.length;
+            let freeItemsCount = 0;
+
+            if (itemCount >= 7) {
+                freeItemsCount = Math.floor(itemCount / 7) * 3 + Math.floor((itemCount % 7) / 3);
+            } else if (itemCount >= 5) {
+                freeItemsCount = 2 + Math.floor((itemCount - 5) / 3);
+            } else if (itemCount >= 3) {
+                freeItemsCount = 1;
+            }
+
+            if (freeItemsCount > 0) {
+                let cheapestItems = [...sortedCart].reverse();
+                for (let i = 0; i < Math.min(freeItemsCount, cheapestItems.length); i++) {
+                    discount += cheapestItems[i].price;
+                }
+            }
+
+            let finalTotal = Math.max(0, subtotal - discount);
+
+            if (discount > 0) {
+                discountRow.classList.remove('hidden');
+                discountAmountEl.innerText = `-$${discount.toFixed(2)}`;
+            } else {
+                discountRow.classList.add('hidden');
+            }
 
             cart.forEach((item, index) => {
-                total += item.price;
                 const el = document.createElement('div');
                 el.className = "flex items-center justify-between bg-darkbg p-3.5 rounded-xl border border-gray-800 text-sm shadow-inner";
                 el.innerHTML = `
@@ -693,7 +738,7 @@
                 container.appendChild(el);
             });
 
-            totalEl.innerText = `$${total.toFixed(2)}`;
+            totalEl.innerText = `$${finalTotal.toFixed(2)}`;
         }
 
         function removeFromCart(index) {
