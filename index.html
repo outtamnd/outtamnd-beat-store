@@ -306,6 +306,10 @@
     <script>
         const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
 
+        // IF YOUR MP3 FILES ARE HOSTED ON YOUR OLD REPO, PUT ITS BASE URL HERE (e.g. 'https://outtamnd.github.io/your-old-repo-name/')
+        // Leave it empty ('') if your audio files are in the same folder or uploaded directly.
+        const AUDIO_BASE_URL = '';
+
         let beats = [];
         let cart = [];
         let currentBeat = null;
@@ -417,8 +421,8 @@
 
             currentBeat = beat;
             
-            // Use the raw path directly from beats.json without double-encoding
-            const audioPath = beat.file || beat.audio || beat.path || `${beat.title || beat.name}.mp3`;
+            const rawPath = beat.file || beat.audio || beat.path || `${beat.title || beat.name}.mp3`;
+            const audioPath = AUDIO_BASE_URL + rawPath;
 
             audio.src = audioPath;
             audio.play().then(() => {
@@ -436,7 +440,7 @@
 
             if (audio.paused) {
                 audio.play();
-                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
