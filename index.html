@@ -308,7 +308,6 @@
     <script>
         const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
 
-        // Points straight to your old site domain where the audio files live
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/';
 
         let beats = [];
@@ -352,12 +351,21 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
+        // Helper to get text after the dash for clean display titles
+        function getDisplayTitle(fullTitle) {
+            const dashIdx = fullTitle.indexOf('-');
+            if (dashIdx !== -1 && dashIdx < fullTitle.length - 1) {
+                return fullTitle.substring(dashIdx + 1).trim();
+            }
+            return fullTitle;
+        }
+
         function renderBeats(items) {
             const container = document.getElementById('beats-container');
             container.innerHTML = '';
 
             if(!items || items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-8 text-sm">No beats found matching your search.</p>';
+                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">No beats found matching your search.</p>';
                 return;
             }
 
@@ -365,6 +373,7 @@
                 const el = document.createElement('div');
                 el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-4 flex items-center justify-between gap-4 group";
                 const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "29.99";
+                const displayTitle = getDisplayTitle(beat.title);
                 
                 el.innerHTML = `
                     <div class="flex items-center space-x-4 min-w-0">
@@ -372,7 +381,7 @@
                             <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-sm"></i>
                         </button>
                         <div class="min-w-0">
-                            <h4 class="text-white font-bold text-sm truncate">${beat.title}</h4>
+                            <h4 class="text-white font-bold text-sm truncate">${displayTitle}</h4>
                             <div class="flex items-center space-x-3 text-xs text-gray-400 mt-0.5">
                                 <span class="text-purple-400 font-medium uppercase">${beat.genre}</span>
                                 <span>•</span>
@@ -396,9 +405,10 @@
             const genre = document.getElementById('genre-filter').value;
 
             const filtered = beats.filter(b => {
-                const title = (b.title || '').toLowerCase();
+                const fullTitle = (b.title || '').toLowerCase();
+                const displayTitle = getDisplayTitle(b.title || '').toLowerCase();
                 const beatGenre = (b.genre || '').toLowerCase();
-                const matchesQuery = title.includes(query);
+                const matchesQuery = displayTitle.includes(query) || fullTitle.includes(query);
                 const matchesGenre = (genre === 'all' || beatGenre.includes(genre.toLowerCase()));
                 return matchesQuery && matchesGenre;
             });
@@ -410,8 +420,10 @@
             const beat = beats.find(b => String(b.id) === String(id));
             if(!beat) return;
 
+            const displayTitle = getDisplayTitle(beat.title);
+
             document.getElementById('player-bar').classList.remove('hidden');
-            document.getElementById('player-title').innerText = beat.title;
+            document.getElementById('player-title').innerText = displayTitle;
             document.getElementById('player-genre').innerText = `${beat.genre.toUpperCase()} • ${beat.bpm} BPM`;
 
             if (currentBeat && String(currentBeat.id) === String(beat.id)) {
@@ -426,7 +438,7 @@
 
             audio.src = audioPath;
             audio.play().then(() => {
-                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
             }).catch(err => {
                 console.warn("Audio playback issue: Ensure file exists at " + audioPath);
             });
@@ -440,7 +452,7 @@
 
             if (audio.paused) {
                 audio.play();
-                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
@@ -461,8 +473,8 @@
         function openLicenseModal(id) {
             activeModalBeat = beats.find(b => String(b.id) === String(id));
             if(!activeModalBeat) return;
-            document.getElementById('modal-beat-title').innerText = `License: ${activeModalBeat.title}`;
-            document.getElementById('license-modal').classList.add('hidden') ? null : document.getElementById('license-modal').classList.remove('hidden');
+            document.getElementById('modal-beat-title').innerText = `License: ${getDisplayTitle(activeModalBeat.title)}`;
+            document.getElementById('license-modal').classList.remove('hidden');
         }
 
         function closeLicenseModal() {
@@ -477,7 +489,7 @@
         function confirmLicensePurchase() {
             if(!activeModalBeat) return;
             cart.push({
-                name: `${activeModalBeat.title} (${selectedLicenseType})`,
+                name: `${getDisplayTitle(activeModalBeat.title)} (${selectedLicenseType})`,
                 price: selectedLicensePrice
             });
             updateCartUI();
