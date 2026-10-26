@@ -24,7 +24,7 @@
                         }
                     },
                     animation: {
-                        sideflip: 'sideflip 6s linear infinite'
+                        sideflip: 'sideflip 7s linear infinite'
                     }
                 }
             }
@@ -42,7 +42,7 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #111827; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-        .perspective-container { perspective: 1000px; }
+        .perspective-container { perspective: 1200px; }
     </style>
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white">
@@ -54,9 +54,18 @@
     <header class="sticky top-0 z-40 bg-darkbg/90 backdrop-blur-md border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- 3D Perspective Sideways Spinning Logo -->
+                <!-- 3D Extruded Sideways Spinning Logo -->
                 <a href="#" class="flex items-center perspective-container py-2">
-                    <img src="logo.png" alt="OUTTAMND" class="h-12 sm:h-16 w-auto object-contain animate-sideflip" style="transform-style: preserve-3d;">
+                    <div class="relative animate-sideflip" style="transform-style: preserve-3d;">
+                        <!-- 3D Back Extrusion Layers for Physical Thickness -->
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-10px); filter: brightness(0.2); opacity: 0.9;">
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-8px); filter: brightness(0.3); opacity: 0.95;">
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-6px); filter: brightness(0.4);">
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-4px); filter: brightness(0.5);">
+                        <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-2px); filter: brightness(0.7);">
+                        <!-- Front Face -->
+                        <img src="logo.png" alt="OUTTAMND" class="h-14 sm:h-18 w-auto object-contain relative select-none" style="transform: translateZ(0px);">
+                    </div>
                 </a>
             </div>
 
