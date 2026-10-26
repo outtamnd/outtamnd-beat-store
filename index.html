@@ -298,6 +298,9 @@
 
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/';
 
+        // Live Stripe Payment Link configured
+        const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
+
         let beats = [];
         let cart = [];
         let currentBeat = null;
@@ -547,13 +550,14 @@
             updateCartUI();
         }
 
-        async function checkoutWithStripe() {
+        function checkoutWithStripe() {
             if (cart.length === 0) {
                 alert("Your cart is empty!");
                 return;
             }
 
-            alert("Connecting to Stripe Checkout for items:\n" + cart.map(i => `- ${i.name} ($${i.price})`).join("\n"));
+            // Redirects to your live Stripe payment link
+            window.location.href = STRIPE_CHECKOUT_URL;
         }
     </script>
 </body>
