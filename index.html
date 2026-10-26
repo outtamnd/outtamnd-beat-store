@@ -416,16 +416,15 @@
             }
 
             currentBeat = beat;
-            const rawPath = beat.file || beat.audio || beat.path || `${beat.title || beat.name}.mp3`;
             
-            // Properly encode special characters like spaces, parentheses, and plus signs for web browsers
-            const encodedPath = rawPath.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            // Use the raw path directly from beats.json without double-encoding
+            const audioPath = beat.file || beat.audio || beat.path || `${beat.title || beat.name}.mp3`;
 
-            audio.src = encodedPath;
+            audio.src = audioPath;
             audio.play().then(() => {
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
-                console.warn("Audio playback issue: Ensure file exists at " + encodedPath);
+                console.warn("Audio playback issue: Ensure file exists at " + audioPath);
             });
         }
 
