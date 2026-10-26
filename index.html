@@ -110,7 +110,6 @@
                     </div>
                     <select id="genre-filter" onchange="filterBeats()" class="bg-cardbg border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent">
                         <option value="all">All Genres</option>
-                        <option value="beezy">Beezy</option>
                         <option value="detroit">Detroit</option>
                         <option value="florida">Florida</option>
                         <option value="chaos">Chaos</option>
@@ -122,7 +121,7 @@
 
             <!-- Beat List Container -->
             <div id="beats-container" class="space-y-3">
-                <!-- Populated dynamically via all_beats.json -->
+                <!-- Populated dynamically via catalog.json -->
             </div>
         </section>
 
@@ -333,8 +332,8 @@
             document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
         });
 
-        // Automatically fetch all_beats.json
-        fetch('all_beats.json')
+        // Automatically fetch catalog.json (updated filename)
+        fetch('catalog.json')
             .then(response => response.json())
             .then(data => {
                 beats = data;
@@ -342,7 +341,7 @@
                 renderBeats(beats);
             })
             .catch(err => {
-                console.error("Error loading all_beats.json:", err);
+                console.error("Error loading catalog.json:", err);
             });
 
         function formatTime(seconds) {
@@ -465,7 +464,7 @@
 
             if (audio.paused) {
                 audio.play();
-                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
