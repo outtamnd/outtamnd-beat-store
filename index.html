@@ -98,7 +98,7 @@
                 <div>
                     <h2 class="text-2xl font-bold text-white tracking-tight flex items-center space-x-3">
                         <span class="w-2.5 h-2.5 rounded-full bg-accent inline-block"></span>
-                        <span>Latest Beats</span>
+                        <span>Latest Beats (<span id="beat-count-label">...</span>)</span>
                     </h2>
                     <p class="text-sm text-gray-400 mt-1">Click play to preview beats instantly.</p>
                 </div>
@@ -110,17 +110,19 @@
                     </div>
                     <select id="genre-filter" onchange="filterBeats()" class="bg-cardbg border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent">
                         <option value="all">All Genres</option>
-                        <option value="West Coast">West Coast</option>
-                        <option value="Pain-Trap">Pain-Trap</option>
-                        <option value="Glo">Glo</option>
-                        <option value="Detroit">Detroit</option>
+                        <option value="beezy">Beezy</option>
+                        <option value="detroit">Detroit</option>
+                        <option value="florida">Florida</option>
+                        <option value="chaos">Chaos</option>
+                        <option value="emotional">Emotional</option>
+                        <option value="2000s">2000s</option>
                     </select>
                 </div>
             </div>
 
             <!-- Beat List Container -->
             <div id="beats-container" class="space-y-3">
-                <!-- Populated dynamically via JavaScript from beats.json -->
+                <!-- Populated dynamically via all_beats.json -->
             </div>
         </section>
 
@@ -306,8 +308,6 @@
     <script>
         const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
 
-        // IF YOUR MP3 FILES ARE HOSTED ON YOUR OLD REPO, PUT ITS BASE URL HERE (e.g. 'https://outtamnd.github.io/your-old-repo-name/')
-        // Leave it empty ('') if your audio files are in the same folder or uploaded directly.
         const AUDIO_BASE_URL = '';
 
         let beats = [];
@@ -333,15 +333,16 @@
             document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
         });
 
-        // Automatically fetch beats from beats.json
-        fetch('beats.json')
+        // Automatically fetch all_beats.json
+        fetch('all_beats.json')
             .then(response => response.json())
             .then(data => {
                 beats = data;
+                document.getElementById('beat-count-label').innerText = beats.length;
                 renderBeats(beats);
             })
             .catch(err => {
-                console.error("Error loading beats.json:", err);
+                console.error("Error loading all_beats.json:", err);
             });
 
         function formatTime(seconds) {
@@ -370,13 +371,11 @@
                             <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-sm"></i>
                         </button>
                         <div class="min-w-0">
-                            <h4 class="text-white font-bold text-sm truncate">${beat.title || beat.name}</h4>
+                            <h4 class="text-white font-bold text-sm truncate">${beat.title}</h4>
                             <div class="flex items-center space-x-3 text-xs text-gray-400 mt-0.5">
-                                <span class="text-purple-400 font-medium">${beat.genre || 'Hip-Hop'}</span>
+                                <span class="text-purple-400 font-medium uppercase">${beat.genre}</span>
                                 <span>•</span>
-                                <span>${beat.bpm || '---'} BPM</span>
-                                <span>•</span>
-                                <span>Key: ${beat.key || '---'}</span>
+                                <span>${beat.bpm} BPM</span>
                             </div>
                         </div>
                     </div>
@@ -396,10 +395,10 @@
             const genre = document.getElementById('genre-filter').value;
 
             const filtered = beats.filter(b => {
-                const title = (b.title || b.name || '').toLowerCase();
-                const beatGenre = b.genre || '';
+                const title = (b.title || '').toLowerCase();
+                const beatGenre = (b.genre || '').toLowerCase();
                 const matchesQuery = title.includes(query);
-                const matchesGenre = (genre === 'all' || beatGenre === genre);
+                const matchesGenre = (genre === 'all' || beatGenre.includes(genre.toLowerCase()));
                 return matchesQuery && matchesGenre;
             });
 
@@ -411,8 +410,8 @@
             if(!beat) return;
 
             document.getElementById('player-bar').classList.remove('hidden');
-            document.getElementById('player-title').innerText = beat.title || beat.name;
-            document.getElementById('player-genre').innerText = `${beat.genre || 'Hip-Hop'} • ${beat.bpm || '---'} BPM`;
+            document.getElementById('player-title').innerText = beat.title;
+            document.getElementById('player-genre').innerText = `${beat.genre.toUpperCase()} • ${beat.bpm} BPM`;
 
             if (currentBeat && String(currentBeat.id) === String(beat.id)) {
                 togglePlay();
@@ -421,8 +420,8 @@
 
             currentBeat = beat;
             
-            const rawPath = beat.file || beat.audio || beat.path || `${beat.title || beat.name}.mp3`;
-            const audioPath = AUDIO_BASE_URL + rawPath;
+            const encodedFile = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const audioPath = AUDIO_BASE_URL + encodedFile;
 
             audio.src = audioPath;
             audio.play().then(() => {
@@ -461,7 +460,7 @@
         function openLicenseModal(id) {
             activeModalBeat = beats.find(b => String(b.id) === String(id));
             if(!activeModalBeat) return;
-            document.getElementById('modal-beat-title').innerText = `License: ${activeModalBeat.title || activeModalBeat.name}`;
+            document.getElementById('modal-beat-title').innerText = `License: ${activeModalBeat.title}`;
             document.getElementById('license-modal').classList.remove('hidden');
         }
 
@@ -477,7 +476,7 @@
         function confirmLicensePurchase() {
             if(!activeModalBeat) return;
             cart.push({
-                name: `${activeModalBeat.title || activeModalBeat.name} (${selectedLicenseType})`,
+                name: `${activeModalBeat.title} (${selectedLicenseType})`,
                 price: selectedLicensePrice
             });
             updateCartUI();
