@@ -295,6 +295,7 @@
     <!-- JavaScript Application Logic -->
     <script>
         const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
+        const AUDIO_BASE_URL = 'https://outtamnd.github.io/';
 
         let beats = [];
         let cart = [];
@@ -430,17 +431,14 @@
 
             currentBeat = beat;
             
-            // Properly encode path segments for mobile
-            const encodedPath = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const encodedFile = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const audioPath = AUDIO_BASE_URL + encodedFile;
 
-            audio.src = encodedPath;
+            audio.src = audioPath;
             audio.play().then(() => {
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
-                console.warn("Mobile audio playback error:", err);
-                // DISPLAY THE EXACT ERROR ON MOBILE SCREEN FOR DEBUGGING:
-                document.getElementById('player-title').innerText = "Error: " + err.name;
-                document.getElementById('player-genre').innerText = err.message;
+                console.warn("Playback error:", err);
             });
         }
 
@@ -455,8 +453,6 @@
                     document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
                 }).catch(err => {
                     console.warn("Playback error:", err);
-                    document.getElementById('player-title').innerText = "Error: " + err.name;
-                    document.getElementById('player-genre').innerText = err.message;
                 });
             } else {
                 audio.pause();
