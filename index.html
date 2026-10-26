@@ -421,20 +421,12 @@
                     </h3>
                     <button onclick="toggleCart()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
-                
-                <div class="my-3 p-3 rounded-xl bg-purple-950/30 border border-purple-800/40 text-purple-300 text-xs text-center font-medium shadow-inner">
-                    🔥 <strong class="text-white">Bundle Deals Active:</strong> Buy 2 Get 1 Free | Buy 3 Get 2 Free | Buy 4 Get 3 Free!
-                </div>
 
                 <div id="cart-items" class="py-2 space-y-3 overflow-y-auto max-h-[50vh] custom-scrollbar">
                     <p class="text-gray-500 text-sm text-center py-8">Your bag is empty.</p>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-4 space-y-2">
-                <div id="discount-row" class="flex items-center justify-between text-xs text-purple-400 hidden">
-                    <span>Bundle Discount Applied:</span>
-                    <span id="discount-amount" class="font-bold">-$0.00</span>
-                </div>
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-sm text-gray-400">Total:</span>
                     <span id="cart-total" class="text-2xl font-black text-white">$0.00</span>
@@ -619,48 +611,16 @@
             updateCartUI();
         }
 
-        function calculateCartTotal() {
-            let beatsList = cart.filter(item => item.type === 'beat');
-            let otherList = cart.filter(item => item.type !== 'beat');
-
-            beatsList.sort((a, b) => b.price - a.price);
-
-            let beatCount = beatsList.length;
-            let freeBeatsCount = 0;
-            if (beatCount >= 4) freeBeatsCount = 3;
-            else if (beatCount >= 3) freeBeatsCount = 2;
-            else if (beatCount >= 2) freeBeatsCount = 1;
-
-            let subtotal = 0;
-            let discount = 0;
-
-            beatsList.forEach((item, index) => {
-                subtotal += item.price;
-                if (index >= (beatCount - freeBeatsCount)) {
-                    discount += item.price;
-                }
-            });
-
-            otherList.forEach(item => {
-                subtotal += item.price;
-            });
-
-            let finalTotal = subtotal - discount;
-            return { subtotal, discount, finalTotal };
-        }
-
+        // Updated cart update function using standard pricing (no bundles)
         function updateCartUI() {
             const container = document.getElementById('cart-items');
             const countLabel = document.getElementById('cart-count');
             const totalLabel = document.getElementById('cart-total');
-            const discountRow = document.getElementById('discount-row');
-            const discountAmount = document.getElementById('discount-amount');
 
             countLabel.innerText = cart.length;
 
             if (cart.length === 0) {
                 container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Your bag is empty.</p>';
-                discountRow.classList.add('hidden');
                 totalLabel.innerText = '$0.00';
                 return;
             }
@@ -675,19 +635,15 @@
                 </div>
             `).join('');
 
-            const { subtotal, discount, finalTotal } = calculateCartTotal();
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+            });
 
-            if (discount > 0) {
-                discountRow.classList.remove('hidden');
-                discountAmount.innerText = `-$${discount.toFixed(2)}`;
-            } else {
-                discountRow.classList.add('hidden');
-            }
-
-            totalLabel.innerText = `$${finalTotal.toFixed(2)}`;
+            totalLabel.innerText = `$${total.toFixed(2)}`;
         }
 
-        // Dynamic Stripe Backend Endpoint Call
+        // Dynamic Stripe Backend Endpoint Call (Standard Pricing)
         async function checkoutWithStripe() {
             if (cart.length === 0) {
                 alert('Your bag is empty!');
@@ -698,11 +654,18 @@
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i><span>Processing...</span>';
 
+            // Map cart items into standard Stripe format expected by api/checkout.js
+            const itemsPayload = cart.map(item => ({
+                name: item.title,
+                price: item.price,
+                quantity: 1
+            }));
+
             try {
                 const response = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items: cart })
+                    body: JSON.stringify({ items: itemsPayload })
                 });
 
                 const data = await response.json();
