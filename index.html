@@ -308,7 +308,8 @@
     <script>
         const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
 
-        const AUDIO_BASE_URL = '';
+        // Points straight to your old site domain where the audio files live
+        const AUDIO_BASE_URL = 'https://outtamnd.github.io/';
 
         let beats = [];
         let cart = [];
@@ -528,7 +529,7 @@
             totalEl.innerText = `$${total.toFixed(2)}`;
         }
 
-        function removeFromCart(index) {
+        function removeFromCard(index) {
             cart.splice(index, 1);
             updateCartUI();
         }
