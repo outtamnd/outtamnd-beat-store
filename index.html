@@ -37,6 +37,9 @@
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white">
 
+    <!-- Native HTML5 Audio Element for Mobile & PC Compatibility -->
+    <audio id="html-audio-element" preload="auto"></audio>
+
     <!-- Top Navigation -->
     <header class="sticky top-0 z-40 bg-darkbg/90 backdrop-blur-md border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -304,8 +307,8 @@
         let selectedLicenseType = 'MP3 Lease';
         let selectedLicensePrice = 25.00;
 
-        // HTML5 Audio Engine Instance
-        const audio = new Audio();
+        // Use the native DOM audio element for strict mobile & web browser compatibility
+        const audio = document.getElementById('html-audio-element');
 
         audio.addEventListener('timeupdate', () => {
             if (audio.duration) {
@@ -431,10 +434,15 @@
 
             currentBeat = beat;
             
-            const encodedFile = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            // Normalize path separators (handles Windows backslashes) and encode URL segments
+            let rawFile = (beat.file || '').replace(/\\/g, '/');
+            if (rawFile.startsWith('/')) rawFile = rawFile.substring(1);
+
+            const encodedFile = rawFile.split('/').map(segment => encodeURIComponent(segment)).join('/');
             const audioPath = AUDIO_BASE_URL + encodedFile;
 
             audio.src = audioPath;
+            audio.load();
             audio.play().then(() => {
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
