@@ -68,8 +68,8 @@
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white grunge-overlay">
 
-    <!-- Native Audio Element -->
-    <audio id="html-audio-element" preload="none"></audio>
+    <!-- Native Audio Element with preload="auto" for mobile compatibility -->
+    <audio id="html-audio-element" preload="auto"></audio>
 
     <!-- Top Navigation -->
     <header class="sticky top-0 z-40 bg-darkbg/95 backdrop-blur-md border-b border-gray-900 shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
@@ -530,7 +530,8 @@
             document.getElementById('player-genre').innerText = genre;
             document.getElementById('player-bar').classList.remove('hidden');
 
-            audio.src = AUDIO_BASE_URL + audioFile;
+            audio.src = AUDIO_BASE_URL + encodeURI(audioFile);
+            audio.load();
             audio.play().catch(e => console.log('Audio playback prevented:', e));
 
             document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
@@ -611,7 +612,6 @@
             updateCartUI();
         }
 
-        // Updated cart update function using standard pricing (no bundles)
         function updateCartUI() {
             const container = document.getElementById('cart-items');
             const countLabel = document.getElementById('cart-count');
@@ -643,7 +643,6 @@
             totalLabel.innerText = `$${total.toFixed(2)}`;
         }
 
-        // Dynamic Stripe Backend Endpoint Call (Standard Pricing)
         async function checkoutWithStripe() {
             if (cart.length === 0) {
                 alert('Your bag is empty!');
@@ -654,7 +653,6 @@
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i><span>Processing...</span>';
 
-            // Map cart items into standard Stripe format expected by api/checkout.js
             const itemsPayload = cart.map(item => ({
                 name: item.title,
                 price: item.price,
