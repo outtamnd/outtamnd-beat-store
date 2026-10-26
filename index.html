@@ -54,7 +54,6 @@
             background-image: radial-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 0);
             background-size: 24px 24px;
         }
-        /* True Alpha-Mask Shine so reflection only hits logo pixels */
         .logo-shine-mask {
             -webkit-mask-image: url('logo.png');
             mask-image: url('logo.png');
@@ -69,22 +68,18 @@
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white grunge-overlay">
 
-    <!-- Native Audio Element for Mobile/Web Browser Compatibility -->
+    <!-- Native Audio Element -->
     <audio id="html-audio-element" preload="none"></audio>
 
     <!-- Top Navigation -->
     <header class="sticky top-0 z-40 bg-darkbg/95 backdrop-blur-md border-b border-gray-900 shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- 3D Metallic Extruded Spinning Logo with Precise Pixel Mask Shine -->
                 <a href="#" class="flex items-center perspective-container py-2">
                     <div class="relative animate-sideflip" style="transform-style: preserve-3d;">
-                        <!-- 3D Depth Layers -->
                         <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-8px); filter: brightness(0.6) contrast(1.2); opacity: 0.85;">
                         <img src="logo.png" alt="" class="h-14 sm:h-18 w-auto object-contain absolute top-0 left-0 select-none pointer-events-none" style="transform: translateZ(-4px); filter: brightness(0.8) contrast(1.2); opacity: 0.95;">
                         <img src="logo.png" alt="OUTTAMND" class="h-14 sm:h-18 w-auto object-contain relative select-none" style="transform: translateZ(0px); filter: contrast(1.1);">
-                        
-                        <!-- Exact Shape Alpha Masked Reflection -->
                         <div class="absolute inset-0 overflow-hidden pointer-events-none logo-shine-mask" style="transform: translateZ(2px);">
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shine w-full"></div>
                         </div>
@@ -100,7 +95,7 @@
                 <button onclick="openContactModal()" class="hover:text-accent transition text-left">Contact</button>
             </nav>
 
-            <!-- Actions (Mobile Menu + Cart) -->
+            <!-- Actions -->
             <div class="flex items-center space-x-3">
                 <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-cardbg border border-gray-800 hover:border-accent transition text-gray-300 shadow-inner">
                     <i class="fa-solid fa-bars text-accent text-base"></i>
@@ -197,11 +192,11 @@
 
             <!-- Beat List Container -->
             <div id="beats-container" class="space-y-3.5">
-                <!-- Populated dynamically via my_beats.json -->
+                <!-- Dynamically populated from my_beats.json -->
             </div>
         </section>
 
-        <!-- Drum Kits / Sound Kits Section -->
+        <!-- Drum Kits Section -->
         <section id="kits" class="pt-12 border-t border-gray-900">
             <div class="mb-8">
                 <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center space-x-3">
@@ -212,7 +207,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Kit Card 1 -->
                 <div class="bg-cardbg border border-gray-800/90 rounded-2xl p-6 flex flex-col justify-between hover:border-gray-700 transition shadow-2xl">
                     <div>
                         <div class="h-44 rounded-xl bg-gradient-to-br from-purple-950/30 via-[#050811] to-black flex items-center justify-center mb-5 border border-gray-800/80 shadow-inner">
@@ -243,7 +237,6 @@
     <!-- Persistent Bottom Sticky Audio Player Bar -->
     <div id="player-bar" class="fixed bottom-0 left-0 right-0 z-50 bg-[#050811]/95 backdrop-blur-md border-t border-gray-800 shadow-[0_-15px_40px_rgba(0,0,0,0.9)] px-3 sm:px-6 py-3.5 hidden">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
-            <!-- Track Info -->
             <div class="flex items-center space-x-3 w-[30%] sm:w-1/4 min-w-0">
                 <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-cardbg flex items-center justify-center flex-shrink-0 border border-gray-800 shadow-inner">
                     <i class="fa-solid fa-compact-disc text-accent text-base sm:text-xl animate-spin drop-shadow-[0_0_8px_#8b5cf6]"></i>
@@ -254,7 +247,6 @@
                 </div>
             </div>
 
-            <!-- Controls & Progress -->
             <div class="flex flex-col items-center w-[55%] sm:w-2/4 max-w-xl">
                 <div class="flex items-center space-x-4 sm:space-x-6 mb-1.5">
                     <button class="text-gray-400 hover:text-white transition text-xs sm:text-sm"><i class="fa-solid fa-backward-step"></i></button>
@@ -272,7 +264,6 @@
                 </div>
             </div>
 
-            <!-- Volume -->
             <div class="hidden md:flex items-center justify-end space-x-4 w-1/4">
                 <div class="flex items-center space-x-2 text-gray-400">
                     <i class="fa-solid fa-volume-high text-sm"></i>
@@ -282,7 +273,7 @@
         </div>
     </div>
 
-    <!-- Licensing Information Explanation Modal -->
+    <!-- Licensing Info Modal -->
     <div id="licensing-info-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeLicensingInfoModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -295,7 +286,6 @@
             </div>
 
             <div class="space-y-4">
-                <!-- MP3 Lease -->
                 <div class="bg-darkbg p-5 rounded-xl border border-gray-800 shadow-inner">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="font-bold text-white text-base">MP3 Lease</h4>
@@ -310,7 +300,6 @@
                     </ul>
                 </div>
 
-                <!-- WAV Lease -->
                 <div class="bg-darkbg p-5 rounded-xl border border-gray-800 shadow-inner">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="font-bold text-white text-base">WAV Lease</h4>
@@ -325,7 +314,6 @@
                     </ul>
                 </div>
 
-                <!-- Unlimited Rights -->
                 <div class="bg-darkbg p-5 rounded-xl border border-gray-800 shadow-inner">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="font-bold text-white text-base">Unlimited Rights</h4>
@@ -349,7 +337,7 @@
         </div>
     </div>
 
-    <!-- Contact Modal Page -->
+    <!-- Contact Modal -->
     <div id="contact-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-800 rounded-2xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
             <button onclick="closeContactModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -394,7 +382,6 @@
             <p class="text-sm text-gray-400 mb-6">Choose the rights that fit your project release.</p>
 
             <div class="space-y-3 mb-6">
-                <!-- MP3 Lease ($25) -->
                 <div onclick="selectLicenseOption('MP3 Lease', 25.00)" class="p-4 sm:p-5 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group bg-darkbg shadow-inner">
                     <div>
                         <h4 class="font-bold text-white group-hover:text-accent transition">MP3 Lease</h4>
@@ -402,7 +389,6 @@
                     </div>
                     <span class="text-lg font-black text-white">$25.00</span>
                 </div>
-                <!-- WAV Lease ($50) -->
                 <div onclick="selectLicenseOption('WAV Lease', 50.00)" class="p-4 sm:p-5 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group bg-darkbg shadow-inner">
                     <div>
                         <h4 class="font-bold text-white group-hover:text-accent transition">WAV Lease</h4>
@@ -410,7 +396,6 @@
                     </div>
                     <span class="text-lg font-black text-white">$50.00</span>
                 </div>
-                <!-- Unlimited Rights ($100) -->
                 <div onclick="selectLicenseOption('Unlimited Rights', 100.00)" class="p-4 sm:p-5 rounded-xl border border-gray-800 hover:border-accent cursor-pointer transition flex items-center justify-between group bg-darkbg shadow-inner">
                     <div>
                         <h4 class="font-bold text-white group-hover:text-accent transition">Unlimited Rights</h4>
@@ -437,7 +422,6 @@
                     <button onclick="toggleCart()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
                 
-                <!-- Bundle Promotion Banner -->
                 <div class="my-3 p-3 rounded-xl bg-purple-950/30 border border-purple-800/40 text-purple-300 text-xs text-center font-medium shadow-inner">
                     🔥 <strong class="text-white">Bundle Deals Active:</strong> Buy 2 Get 1 Free | Buy 3 Get 2 Free | Buy 4 Get 3 Free!
                 </div>
@@ -465,10 +449,7 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
-
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/old-site/';
-        const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
         const MEDIAFIRE_DRUMKIT_URL = 'https://www.mediafire.com/file/brise7wzx7jg29z/%2521OUTTADRUMS_V1_OFFICIAL_DRUMKIT.zip/file';
 
         let beats = [];
@@ -478,7 +459,6 @@
         let selectedLicenseType = 'MP3 Lease';
         let selectedLicensePrice = 25.00;
 
-        // Native DOM audio element for strict mobile browser policies
         const audio = document.getElementById('html-audio-element');
 
         audio.addEventListener('timeupdate', () => {
@@ -491,90 +471,52 @@
         });
 
         audio.addEventListener('ended', () => {
-            document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
-            if (currentBeat) {
-                const iconEl = document.getElementById(`btn-icon-${currentBeat.id}`);
-                if (iconEl) iconEl.className = "fa-solid fa-play text-xs sm:text-sm";
+            document.getElementById('play-icon').className = 'fa-solid fa-play text-xs sm:text-sm';
+        });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('my_beats.json');
+                beats = await res.json();
+                document.getElementById('beat-count-label').innerText = beats.length;
+                renderBeats(beats);
+            } catch (err) {
+                console.error('Error loading beats:', err);
+                document.getElementById('beats-container').innerHTML = '<p class="text-gray-500 text-sm text-center py-4">Failed to load beats catalog.</p>';
             }
         });
 
-        // Automatically fetch my_beats.json
-        fetch('my_beats.json')
-            .then(response => response.json())
-            .then(data => {
-                beats = data;
-                document.getElementById('beat-count-label').innerText = beats.length;
-                renderBeats(beats);
-            })
-            .catch(err => {
-                console.error("Error loading my_beats.json:", err);
-            });
-
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
-        // Helper to get text after dash and strip trailing BPM numbers for display
-        function getDisplayTitle(fullTitle) {
-            const dashIdx = fullTitle.indexOf('-');
-            let cleanTitle = fullTitle;
-            if (dashIdx !== -1 && dashIdx < fullTitle.length - 1) {
-                cleanTitle = fullTitle.substring(dashIdx + 1).trim();
-            } else {
-                cleanTitle = fullTitle.trim();
-            }
-            
-            const words = cleanTitle.split(' ');
-            if (words.length > 1) {
-                const lastWord = words[words.length - 1];
-                if (!isNaN(lastWord) && lastWord.length <= 3) {
-                    words.pop();
-                    cleanTitle = words.join(' ').trim();
-                }
-            }
-            return cleanTitle;
-        }
-
-        function renderBeats(items) {
+        function renderBeats(list) {
             const container = document.getElementById('beats-container');
-            container.innerHTML = '';
-
-            if(!items || items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">No beats found matching your search.</p>';
+            if (list.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">No beats found matching your filter.</p>';
                 return;
             }
 
-            items.forEach(beat => {
-                const el = document.createElement('div');
-                el.className = "bg-cardbg border border-gray-800/85 hover:border-gray-700 transition rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-3 group shadow-lg";
-                const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "25.00";
-                const displayTitle = getDisplayTitle(beat.title);
-                
-                el.innerHTML = `
-                    <div class="flex items-center space-x-3 min-w-0 flex-grow pr-2">
-                        <button onclick="playBeat('${beat.id}')" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#050811] border border-gray-800 group-hover:border-accent text-accent flex items-center justify-center flex-shrink-0 transition shadow-inner">
-                            <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-xs sm:text-sm"></i>
+            container.innerHTML = list.map((beat, idx) => `
+                <div class="bg-cardbg border border-gray-800/90 hover:border-gray-700 transition rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4 shadow-xl group">
+                    <div class="flex items-center space-x-4 min-w-0">
+                        <button onclick="playBeat('${beat.title}', '${beat.audio}', '${beat.genre || 'Beat'}')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-accent/20 border border-accent/40 group-hover:bg-accent text-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+                            <i class="fa-solid fa-play text-sm sm:text-base"></i>
                         </button>
-                        <div class="min-w-0 flex-grow">
-                            <h4 class="text-white font-bold text-xs sm:text-sm truncate">${displayTitle}</h4>
-                            <div class="flex flex-wrap items-center gap-x-2 text-[11px] sm:text-xs text-gray-400 mt-0.5">
-                                <span class="text-purple-400 font-semibold uppercase break-words">${beat.genre}</span>
-                                <span class="text-gray-600">•</span>
-                                <span class="flex-shrink-0 font-mono">${beat.bpm} BPM</span>
+                        <div class="min-w-0">
+                            <h4 class="text-white font-black text-base sm:text-lg truncate">${beat.title}</h4>
+                            <div class="flex items-center space-x-3 text-xs text-gray-400 mt-1 font-mono">
+                                <span class="text-purple-400 font-bold">${beat.bpm ? beat.bpm + ' BPM' : '140 BPM'}</span>
+                                <span>•</span>
+                                <span class="uppercase tracking-wider">${beat.genre || 'Trap'}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-                        <span class="text-white font-black text-sm sm:text-base">$${beatPrice}</span>
-                        <button onclick="openLicenseModal('${beat.id}')" class="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-bold transition whitespace-nowrap shadow-md shadow-purple-950/50">
-                            Add to Bag
+                    <div class="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
+                        <span class="text-white font-black text-base sm:text-lg">$25.00+</span>
+                        <button onclick="openLicenseModal('${beat.title}')" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-bold transition shadow-md shadow-purple-950/50 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span class="hidden sm:inline">Add</span>
                         </button>
                     </div>
-                `;
-                container.appendChild(el);
-            });
+                </div>
+            `).join('');
         }
 
         function filterBeats() {
@@ -582,122 +524,67 @@
             const genre = document.getElementById('genre-filter').value;
 
             const filtered = beats.filter(b => {
-                const fullTitle = (b.title || '').toLowerCase();
-                const displayTitle = getDisplayTitle(b.title || '').toLowerCase();
-                const beatGenre = (b.genre || '').toLowerCase();
-                const matchesQuery = displayTitle.includes(query) || fullTitle.includes(query);
-                const matchesGenre = (genre === 'all' || beatGenre.includes(genre.toLowerCase()));
+                const matchesQuery = b.title.toLowerCase().includes(query) || (b.genre && b.genre.toLowerCase().includes(query));
+                const matchesGenre = genre === 'all' || (b.genre && b.genre.toLowerCase() === genre.toLowerCase());
                 return matchesQuery && matchesGenre;
             });
 
             renderBeats(filtered);
         }
 
-        function resetAllPlayButtons() {
-            beats.forEach(b => {
-                const icon = document.getElementById(`btn-icon-${b.id}`);
-                if (icon) icon.className = "fa-solid fa-play text-xs sm:text-sm";
-            });
-        }
-
-        function playBeat(id) {
-            const beat = beats.find(b => String(b.id) === String(id));
-            if(!beat) return;
-
-            const displayTitle = getDisplayTitle(beat.title);
-
+        function playBeat(title, audioFile, genre) {
+            currentBeat = title;
+            document.getElementById('player-title').innerText = title;
+            document.getElementById('player-genre').innerText = genre;
             document.getElementById('player-bar').classList.remove('hidden');
-            document.getElementById('player-title').innerText = displayTitle;
-            document.getElementById('player-genre').innerText = `${beat.genre.toUpperCase()} • ${beat.bpm} BPM`;
 
-            if (currentBeat && String(currentBeat.id) === String(beat.id)) {
-                togglePlay();
-                return;
-            }
+            audio.src = AUDIO_BASE_URL + audioFile;
+            audio.play().catch(e => console.log('Audio playback prevented:', e));
 
-            resetAllPlayButtons();
-            currentBeat = beat;
-
-            const currentIcon = document.getElementById(`btn-icon-${beat.id}`);
-            if (currentIcon) currentIcon.className = "fa-solid fa-pause text-xs sm:text-sm";
-
-            let rawFile = (beat.file || '').replace(/\\/g, '/');
-            if (rawFile.startsWith('/')) rawFile = rawFile.substring(1);
-
-            let audioPath = rawFile;
-            if (!rawFile.startsWith('http://') && !rawFile.startsWith('https://')) {
-                const encodedFile = rawFile.split('/').map(segment => encodeURIComponent(segment)).join('/');
-                audioPath = AUDIO_BASE_URL + encodedFile;
-            }
-
-            audio.src = audioPath;
-            audio.load();
-            audio.play().then(() => {
-                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
-            }).catch(err => {
-                console.warn("Audio playback issue: Ensure file exists at " + audioPath, err);
-            });
+            document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
         }
 
         function togglePlay() {
-            if (!currentBeat && beats.length > 0) {
-                playBeat(beats[0].id);
-                return;
-            }
-
-            const currentIcon = currentBeat ? document.getElementById(`btn-icon-${currentBeat.id}`) : null;
-
             if (audio.paused) {
-                audio.play().then(() => {
-                    document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
-                    if (currentIcon) currentIcon.className = "fa-solid fa-pause text-xs sm:text-sm";
-                }).catch(err => {
-                    console.warn("Playback error:", err);
-                });
+                audio.play();
+                document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
             } else {
                 audio.pause();
-                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
-                if (currentIcon) currentIcon.className = "fa-solid fa-play text-xs sm:text-sm";
+                document.getElementById('play-icon').className = 'fa-solid fa-play text-xs sm:text-sm';
             }
         }
 
-        function seekAudio(e) {
-            if (!audio.duration) return;
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            audio.currentTime = pos * audio.duration;
+        function seekAudio(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const pos = (event.clientX - rect.left) / rect.width;
+            if (audio.duration) {
+                audio.currentTime = pos * audio.duration;
+            }
         }
 
         function setVolume(val) {
             audio.volume = val;
         }
 
-        function openLicensingInfoModal() {
-            document.getElementById('licensing-info-modal').classList.remove('hidden');
+        function formatTime(secs) {
+            const mins = Math.floor(secs / 60);
+            const remain = Math.floor(secs % 60);
+            return mins + ':' + (remain < 10 ? '0' : '') + remain;
         }
 
-        function closeLicensingInfoModal() {
-            document.getElementById('licensing-info-modal').classList.add('hidden');
-        }
+        function openLicensingInfoModal() { document.getElementById('licensing-info-modal').classList.remove('hidden'); }
+        function closeLicensingInfoModal() { document.getElementById('licensing-info-modal').classList.add('hidden'); }
+        function openContactModal() { document.getElementById('contact-modal').classList.remove('hidden'); }
+        function closeContactModal() { document.getElementById('contact-modal').classList.add('hidden'); }
+        function toggleCart() { document.getElementById('cart-drawer').classList.toggle('hidden'); }
+        function toggleMobileMenu() { document.getElementById('mobile-menu-drawer').classList.toggle('hidden'); }
 
-        function openContactModal() {
-            document.getElementById('contact-modal').classList.remove('hidden');
-        }
-
-        function closeContactModal() {
-            document.getElementById('contact-modal').classList.add('hidden');
-        }
-
-        function openLicenseModal(id) {
-            activeModalBeat = beats.find(b => String(b.id) === String(id));
-            if(!activeModalBeat) return;
-            document.getElementById('modal-beat-title').innerText = `License: ${getDisplayTitle(activeModalBeat.title)}`;
+        function openLicenseModal(title) {
+            activeModalBeat = title;
+            document.getElementById('modal-beat-title').innerText = title;
             document.getElementById('license-modal').classList.remove('hidden');
         }
-
-        function closeLicenseModal() {
-            document.getElementById('license-modal').classList.add('hidden');
-        }
+        function closeLicenseModal() { document.getElementById('license-modal').classList.add('hidden'); }
 
         function selectLicenseOption(type, price) {
             selectedLicenseType = type;
@@ -705,99 +592,26 @@
         }
 
         function confirmLicensePurchase() {
-            if(!activeModalBeat) return;
+            if (!activeModalBeat) return;
             cart.push({
-                name: `${getDisplayTitle(activeModalBeat.title)} (${selectedLicenseType})`,
-                price: selectedLicensePrice
+                title: `${activeModalBeat} (${selectedLicenseType})`,
+                price: selectedLicensePrice,
+                type: 'beat'
             });
-            updateCartUI();
             closeLicenseModal();
-            toggleCart();
-        }
-
-        function addKitToCart(name, price) {
-            cart.push({ name: name, price: price, isKit: true });
             updateCartUI();
             toggleCart();
         }
 
-        function toggleCart() {
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('hidden');
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu-drawer');
-            menu.classList.toggle('hidden');
-        }
-
-        function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            const countEl = document.getElementById('cart-count');
-            const totalEl = document.getElementById('cart-total');
-            const discountRow = document.getElementById('discount-row');
-            const discountAmountEl = document.getElementById('discount-amount');
-
-            countEl.innerText = cart.length;
-
-            if(cart.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Your bag is empty.</p>';
-                totalEl.innerText = '$0.00';
-                discountRow.classList.add('hidden');
-                return;
-            }
-
-            container.innerHTML = '';
-            
-            let sortedCart = [...cart].sort((a, b) => b.price - a.price);
-            let subtotal = 0;
-            let discount = 0;
-
-            sortedCart.forEach(item => {
-                subtotal += item.price;
+        function addKitToCart(title, price) {
+            cart.push({
+                title: title,
+                price: price,
+                type: 'kit',
+                downloadUrl: MEDIAFIRE_DRUMKIT_URL
             });
-
-            let itemCount = sortedCart.length;
-            let freeItemsCount = 0;
-
-            if (itemCount >= 7) {
-                freeItemsCount = Math.floor(itemCount / 7) * 3 + Math.floor((itemCount % 7) / 3);
-            } else if (itemCount >= 5) {
-                freeItemsCount = 2 + Math.floor((itemCount - 5) / 3);
-            } else if (itemCount >= 3) {
-                freeItemsCount = 1;
-            }
-
-            if (freeItemsCount > 0) {
-                let cheapestItems = [...sortedCart].reverse();
-                for (let i = 0; i < Math.min(freeItemsCount, cheapestItems.length); i++) {
-                    discount += cheapestItems[i].price;
-                }
-            }
-
-            let finalTotal = Math.max(0, subtotal - discount);
-
-            if (discount > 0) {
-                discountRow.classList.remove('hidden');
-                discountAmountEl.innerText = `-$${discount.toFixed(2)}`;
-            } else {
-                discountRow.classList.add('hidden');
-            }
-
-            cart.forEach((item, index) => {
-                const el = document.createElement('div');
-                el.className = "flex items-center justify-between bg-darkbg p-3.5 rounded-xl border border-gray-800 text-sm shadow-inner";
-                el.innerHTML = `
-                    <div class="min-w-0 pr-2">
-                        <h4 class="text-white font-medium truncate">${item.name}</h4>
-                        <span class="text-gray-400 text-xs">$${item.price.toFixed(2)}</span>
-                    </div>
-                    <button onclick="removeFromCart(${index})" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-trash"></i></button>
-                `;
-                container.appendChild(el);
-            });
-
-            totalEl.innerText = `$${finalTotal.toFixed(2)}`;
+            updateCartUI();
+            toggleCart();
         }
 
         function removeFromCart(index) {
@@ -805,16 +619,106 @@
             updateCartUI();
         }
 
-        function checkoutWithStripe() {
+        function calculateCartTotal() {
+            let beatsList = cart.filter(item => item.type === 'beat');
+            let otherList = cart.filter(item => item.type !== 'beat');
+
+            beatsList.sort((a, b) => b.price - a.price);
+
+            let beatCount = beatsList.length;
+            let freeBeatsCount = 0;
+            if (beatCount >= 4) freeBeatsCount = 3;
+            else if (beatCount >= 3) freeBeatsCount = 2;
+            else if (beatCount >= 2) freeBeatsCount = 1;
+
+            let subtotal = 0;
+            let discount = 0;
+
+            beatsList.forEach((item, index) => {
+                subtotal += item.price;
+                if (index >= (beatCount - freeBeatsCount)) {
+                    discount += item.price;
+                }
+            });
+
+            otherList.forEach(item => {
+                subtotal += item.price;
+            });
+
+            let finalTotal = subtotal - discount;
+            return { subtotal, discount, finalTotal };
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const countLabel = document.getElementById('cart-count');
+            const totalLabel = document.getElementById('cart-total');
+            const discountRow = document.getElementById('discount-row');
+            const discountAmount = document.getElementById('discount-amount');
+
+            countLabel.innerText = cart.length;
+
             if (cart.length === 0) {
-                alert("Your bag is empty!");
+                container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Your bag is empty.</p>';
+                discountRow.classList.add('hidden');
+                totalLabel.innerText = '$0.00';
                 return;
             }
-            const hasKitOnly = cart.length === 1 && cart[0].isKit;
-            if (hasKitOnly) {
-                window.location.href = MEDIAFIRE_DRUMKIT_URL;
+
+            container.innerHTML = cart.map((item, idx) => `
+                <div class="bg-darkbg border border-gray-800 p-3.5 rounded-xl flex items-center justify-between shadow-inner">
+                    <div class="min-w-0 pr-3">
+                        <h4 class="text-white font-bold text-sm truncate">${item.title}</h4>
+                        <span class="text-xs text-purple-400 font-mono font-semibold">$${item.price.toFixed(2)}</span>
+                    </div>
+                    <button onclick="removeFromCart(${idx})" class="text-gray-500 hover:text-red-400 text-xs px-2 py-1 transition"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+
+            const { subtotal, discount, finalTotal } = calculateCartTotal();
+
+            if (discount > 0) {
+                discountRow.classList.remove('hidden');
+                discountAmount.innerText = `-$${discount.toFixed(2)}`;
             } else {
-                window.location.href = STRIPE_CHECKOUT_URL;
+                discountRow.classList.add('hidden');
+            }
+
+            totalLabel.innerText = `$${finalTotal.toFixed(2)}`;
+        }
+
+        // Dynamic Stripe Backend Endpoint Call
+        async function checkoutWithStripe() {
+            if (cart.length === 0) {
+                alert('Your bag is empty!');
+                return;
+            }
+
+            const checkoutBtn = document.getElementById('checkout-btn');
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i><span>Processing...</span>';
+
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart })
+                });
+
+                const data = await response.json();
+
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    alert('Checkout error: ' + (data.error || 'Unable to create session'));
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.innerHTML = '<i class="fa-brands fa-stripe text-xl"></i><span>Pay with Stripe</span>';
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+                alert('Network error connecting to backend.');
+                checkoutBtn.disabled = false;
+                checkoutBtn.innerHTML = '<i class="fa-brands fa-stripe text-xl"></i><span>Pay with Stripe</span>';
             }
         }
     </script>
