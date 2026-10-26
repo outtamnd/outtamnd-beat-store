@@ -488,7 +488,7 @@
             container.innerHTML = list.map((beat, idx) => `
                 <div class="bg-cardbg border border-gray-800/90 hover:border-gray-700 transition rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4 shadow-xl group">
                     <div class="flex items-center space-x-4 min-w-0">
-                        <button onclick="playBeat('${beat.title}', '${beat.audio}', '${beat.genre || 'Beat'}')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-accent/20 border border-accent/40 group-hover:bg-accent text-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+                        <button onclick="playBeat('${beat.title.replace(/'/g, "\\'")}', '${beat.audio}', '${beat.genre || 'Beat'}')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-accent/20 border border-accent/40 group-hover:bg-accent text-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition shadow-[0_0_15px_rgba(139,92,246,0.2)]">
                             <i class="fa-solid fa-play text-sm sm:text-base"></i>
                         </button>
                         <div class="min-w-0">
@@ -502,7 +502,7 @@
                     </div>
                     <div class="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
                         <span class="text-white font-black text-base sm:text-lg">$25.00+</span>
-                        <button onclick="openLicenseModal('${beat.title}')" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-bold transition shadow-md shadow-purple-950/50 flex items-center space-x-1.5">
+                        <button onclick="openLicenseModal('${beat.title.replace(/'/g, "\\'")}')" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-bold transition shadow-md shadow-purple-950/50 flex items-center space-x-1.5">
                             <i class="fa-solid fa-cart-plus"></i>
                             <span class="hidden sm:inline">Add</span>
                         </button>
@@ -532,15 +532,23 @@
 
             audio.src = AUDIO_BASE_URL + encodeURI(audioFile);
             audio.load();
-            audio.play().catch(e => console.log('Audio playback prevented:', e));
-
-            document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
+            audio.play().then(() => {
+                document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
+            }).catch(e => {
+                console.log('Audio playback prevented or failed:', e);
+                document.getElementById('play-icon').className = 'fa-solid fa-play text-xs sm:text-sm';
+            });
         }
 
         function togglePlay() {
             if (audio.paused) {
-                audio.play();
-                document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
+                if (!audio.src && beats.length > 0) {
+                    playBeat(beats[0].title, beats[0].audio, beats[0].genre || 'Beat');
+                    return;
+                }
+                audio.play().then(() => {
+                    document.getElementById('play-icon').className = 'fa-solid fa-pause text-xs sm:text-sm';
+                }).catch(e => console.log('Play prevented:', e));
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = 'fa-solid fa-play text-xs sm:text-sm';
