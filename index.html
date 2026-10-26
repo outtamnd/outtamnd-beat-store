@@ -121,7 +121,7 @@
 
             <!-- Beat List Container -->
             <div id="beats-container" class="space-y-3">
-                <!-- Populated dynamically via outtamnd_beats.json -->
+                <!-- Populated dynamically via my_beats.json -->
             </div>
         </section>
 
@@ -332,8 +332,8 @@
             document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
         });
 
-        // Automatically fetch outtamnd_beats.json
-        fetch('outtamnd_beats.json')
+        // Automatically fetch my_beats.json
+        fetch('my_beats.json')
             .then(response => response.json())
             .then(data => {
                 beats = data;
@@ -341,7 +341,7 @@
                 renderBeats(beats);
             })
             .catch(err => {
-                console.error("Error loading outtamnd_beats.json:", err);
+                console.error("Error loading my_beats.json:", err);
             });
 
         function formatTime(seconds) {
@@ -464,7 +464,7 @@
 
             if (audio.paused) {
                 audio.play();
-                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
+                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
             } else {
                 audio.pause();
                 document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
