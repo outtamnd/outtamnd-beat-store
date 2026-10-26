@@ -487,16 +487,35 @@
 
             container.innerHTML = list.map((beat, idx) => {
                 const audioFile = beat.audio || beat.filename || beat.file || '';
+                
+                // Clean up title: keep only the track name after the dash (without leading prefix and trailing BPM)
+                let displayTitle = beat.title;
+                let detectedBpm = beat.bpm;
+                
+                if (beat.title && beat.title.includes(' - ')) {
+                    const parts = beat.title.split(' - ');
+                    const suffix = parts[1];
+                    const match = suffix.match(/^(.*?)\s+(\d{2,3})$/);
+                    if (match) {
+                        displayTitle = match[1]; // e.g. "turnt", "drugs frm egypt"
+                        if (!detectedBpm) detectedBpm = match[2];
+                    } else {
+                        displayTitle = suffix;
+                    }
+                }
+
+                const bpmDisplay = detectedBpm ? `${detectedBpm} BPM` : '140 BPM';
+
                 return `
                 <div class="bg-cardbg border border-gray-800/90 hover:border-gray-700 transition rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4 shadow-xl group">
                     <div class="flex items-center space-x-4 min-w-0">
-                        <button onclick="playBeat('${beat.title.replace(/'/g, "\\'")}', '${audioFile}', '${beat.genre || 'Beat'}')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-accent/20 border border-accent/40 group-hover:bg-accent text-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+                        <button onclick="playBeat('${displayTitle.replace(/'/g, "\\'")}', '${audioFile}', '${beat.genre || 'Beat'}')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-accent/20 border border-accent/40 group-hover:bg-accent text-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition shadow-[0_0_15px_rgba(139,92,246,0.2)]">
                             <i class="fa-solid fa-play text-sm sm:text-base"></i>
                         </button>
                         <div class="min-w-0">
-                            <h4 class="text-white font-black text-base sm:text-lg truncate">${beat.title}</h4>
+                            <h4 class="text-white font-black text-base sm:text-lg truncate">${displayTitle}</h4>
                             <div class="flex items-center space-x-3 text-xs text-gray-400 mt-1 font-mono">
-                                <span class="text-purple-400 font-bold">${beat.bpm ? beat.bpm + ' BPM' : '140 BPM'}</span>
+                                <span class="text-purple-400 font-bold">${bpmDisplay}</span>
                                 <span>•</span>
                                 <span class="uppercase tracking-wider">${beat.genre || 'Trap'}</span>
                             </div>
@@ -504,7 +523,7 @@
                     </div>
                     <div class="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
                         <span class="text-white font-black text-base sm:text-lg">$25.00+</span>
-                        <button onclick="openLicenseModal('${beat.title.replace(/'/g, "\\'")}')" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-bold transition shadow-md shadow-purple-950/50 flex items-center space-x-1.5">
+                        <button onclick="openLicenseModal('${displayTitle.replace(/'/g, "\\'")}')" class="px-4 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-bold transition shadow-md shadow-purple-950/50 flex items-center space-x-1.5">
                             <i class="fa-solid fa-cart-plus"></i>
                             <span class="hidden sm:inline">Add</span>
                         </button>
@@ -552,7 +571,16 @@
             if (audio.paused) {
                 if (!audio.src && beats.length > 0) {
                     const firstBeat = beats[0];
-                    playBeat(firstBeat.title, firstBeat.audio || firstBeat.filename || firstBeat.file, firstBeat.genre || 'Beat');
+                    const audioFile = firstBeat.audio || firstBeat.filename || firstBeat.file || '';
+                    let displayTitle = firstBeat.title;
+                    if (firstBeat.title && firstBeat.title.includes(' - ')) {
+                        const parts = firstBeat.title.split(' - ');
+                        const suffix = parts[1];
+                        const match = suffix.match(/^(.*?)\s+(\d{2,3})$/);
+                        if (match) displayTitle = match.id || match[1];
+                        else displayTitle = suffix;
+                    }
+                    playBeat(displayTitle, audioFile, firstBeat.genre || 'Beat');
                     return;
                 }
                 audio.play().then(() => {
