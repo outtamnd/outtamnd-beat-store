@@ -1,6 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).end('Method Not Allowed');
@@ -72,4 +72,4 @@ export default async function handler(req, res) {
     console.error('Stripe backend error:', err);
     return res.status(500).json({ error: err.message });
   }
-}
+};
