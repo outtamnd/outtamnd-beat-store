@@ -69,7 +69,7 @@
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
                 <a href="#beats" class="hover:text-accent transition">Beats</a>
                 <a href="#kits" class="hover:text-accent transition">Drum Kits</a>
-                <a href="#licensing" class="hover:text-accent transition">Licensing</a>
+                <button onclick="openLicensingInfoModal()" class="hover:text-accent transition text-left">Licensing</button>
                 <button onclick="openContactModal()" class="hover:text-accent transition text-left">Contact</button>
             </nav>
 
@@ -224,6 +224,73 @@
         </div>
     </div>
 
+    <!-- Licensing Information Explanation Modal -->
+    <div id="licensing-info-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-800 rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeLicensingInfoModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-accent/20 border border-accent/40 flex items-center justify-center text-accent text-xl mb-3 shadow-inner">
+                    <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Licensing Terms & Rights</h3>
+                <p class="text-sm text-gray-400 mt-1">Understand what you get with each tier before releasing your track.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- MP3 Lease -->
+                <div class="bg-darkbg p-4 rounded-xl border border-gray-800/80 shadow-inner">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-bold text-white text-base">MP3 Lease</h4>
+                        <span class="text-accent font-bold text-lg">$25.00</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-3">Ideal for standard single releases on streaming platforms and social media uploads.</p>
+                    <ul class="text-xs text-gray-400 space-y-1.5 list-disc list-inside">
+                        <li>Includes High-Quality MP3 File (.mp3)</li>
+                        <li>Up to <strong class="text-white">5,000</strong> audio streams on Spotify, Apple Music, etc.</li>
+                        <li>Up to <strong class="text-white">1</strong> commercial music video</li>
+                        <li>Must credit producer (Prod. by Outtamnd)</li>
+                    </ul>
+                </div>
+
+                <!-- WAV Lease -->
+                <div class="bg-darkbg p-4 rounded-xl border border-gray-800/80 shadow-inner">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-bold text-white text-base">WAV Lease</h4>
+                        <span class="text-accent font-bold text-lg">$50.00</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-3">Higher audio fidelity for professional mixing, mastering, and heavier promotion.</p>
+                    <ul class="text-xs text-gray-400 space-y-1.5 list-disc list-inside">
+                        <li>Includes MP3 & High-Quality WAV Audio Files (.wav)</li>
+                        <li>Up to <strong class="text-white">15,000</strong> audio streams</li>
+                        <li>Up to <strong class="text-white">2</strong> commercial music videos</li>
+                        <li>Radio broadcasting rights (up to 2 radio stations)</li>
+                    </ul>
+                </div>
+
+                <!-- Unlimited Rights -->
+                <div class="bg-darkbg p-4 rounded-xl border border-gray-800/80 shadow-inner">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-bold text-white text-base">Unlimited Rights</h4>
+                        <span class="text-accent font-bold text-lg">$100.00</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-3">Maximum flexibility and control with full track stems for your engineer.</p>
+                    <ul class="text-xs text-gray-400 space-y-1.5 list-disc list-inside">
+                        <li>Includes MP3, WAV, + Full Track Stems (Wav tracks separated)</li>
+                        <li><strong class="text-white">Unlimited</strong> streams and commercial distribution</li>
+                        <li><strong class="text-white">Unlimited</strong> music videos & live performances</li>
+                        <li>Full ownership control for major label pitching</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <button onclick="closeLicensingInfoModal()" class="px-6 py-2.5 rounded-xl bg-accent hover:bg-accenthover text-white text-sm font-semibold transition shadow-lg">
+                    Got It, Back to Beats
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Contact Modal Page -->
     <div id="contact-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-800 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
@@ -261,7 +328,7 @@
         </div>
     </div>
 
-    <!-- License Modal -->
+    <!-- License Selection Modal (When clicking Add to Bag on a beat) -->
     <div id="license-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-800 rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl">
             <button onclick="closeLicenseModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -479,11 +546,9 @@
                 return;
             }
 
-            // Reset previous icons
             resetAllPlayButtons();
             currentBeat = beat;
 
-            // Set current button to pause
             const currentIcon = document.getElementById(`btn-icon-${beat.id}`);
             if (currentIcon) currentIcon.className = "fa-solid fa-pause text-xs sm:text-sm";
 
@@ -536,6 +601,14 @@
 
         function setVolume(val) {
             audio.volume = val;
+        }
+
+        function openLicensingInfoModal() {
+            document.getElementById('licensing-info-modal').classList.remove('hidden');
+        }
+
+        function closeLicensingInfoModal() {
+            document.getElementById('licensing-info-modal').classList.add('hidden');
         }
 
         function openContactModal() {
