@@ -120,7 +120,7 @@
 
             <!-- Beat List Container -->
             <div id="beats-container" class="space-y-3">
-                <!-- Populated dynamically via JavaScript -->
+                <!-- Populated dynamically via JavaScript from beats.json -->
             </div>
         </section>
 
@@ -199,7 +199,7 @@
             <!-- Track Info -->
             <div class="flex items-center space-x-3 w-1/4 min-w-0">
                 <div class="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 border border-gray-700">
-                    <i class="fa-solid fa-compact-disc text-accent text-xl animate-spin-slow"></i>
+                    <i class="fa-solid fa-compact-disc text-accent text-xl animate-spin"></i>
                 </div>
                 <div class="min-w-0">
                     <h4 id="player-title" class="text-sm font-bold text-white truncate">Select a Beat</h4>
@@ -218,10 +218,10 @@
                 </div>
                 <div class="w-full flex items-center space-x-3 text-xs text-gray-400">
                     <span id="current-time">0:00</span>
-                    <div class="flex-grow bg-gray-800 h-1.5 rounded-full overflow-hidden cursor-pointer">
+                    <div class="flex-grow bg-gray-800 h-1.5 rounded-full overflow-hidden cursor-pointer" onclick="seekAudio(event)">
                         <div id="progress-bar" class="bg-accent h-full w-0 transition-all"></div>
                     </div>
-                    <span id="duration">0:30</span>
+                    <span id="duration">0:00</span>
                 </div>
             </div>
 
@@ -229,7 +229,7 @@
             <div class="hidden md:flex items-center justify-end space-x-4 w-1/4">
                 <div class="flex items-center space-x-2 text-gray-400">
                     <i class="fa-solid fa-volume-high text-sm"></i>
-                    <input type="range" min="0" max="100" value="80" class="w-20 accent-accent cursor-pointer">
+                    <input type="range" min="0" max="1" step="0.01" value="0.8" oninput="setVolume(this.value)" class="w-20 accent-accent cursor-pointer">
                 </div>
             </div>
         </div>
@@ -304,31 +304,53 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Initialized with your active Stripe publishable key
         const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
 
-        const beats = [
-            { id: 1, title: "Rancho Cucamonga", bpm: 142, genre: "West Coast", price: 29.99, key: "Am" },
-            { id: 2, title: "Menace Mode", bpm: 146, genre: "Detroit", price: 29.99, key: "Dm" },
-            { id: 3, title: "Pain & Prosperity", bpm: 138, genre: "Pain-Trap", price: 34.99, key: "Em" },
-            { id: 4, title: "Glacier Vibe", bpm: 150, genre: "Glo", price: 29.99, key: "F#m" },
-            { id: 5, title: "Long Beach Menace", bpm: 144, genre: "West Coast", price: 39.99, key: "Gm" }
-        ];
-
+        let beats = [];
         let cart = [];
         let currentBeat = null;
-        let isPlaying = false;
         let activeModalBeat = null;
         let selectedLicenseType = 'MP3 Lease';
         let selectedLicensePrice = 29.99;
-        let progressInterval = null;
-        let currentProgress = 0;
+
+        // HTML5 Audio Engine Instance
+        const audio = new Audio();
+
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const pct = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('progress-bar').style.width = pct + '%';
+                document.getElementById('current-time').innerText = formatTime(audio.currentTime);
+                document.getElementById('duration').innerText = formatTime(audio.duration);
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
+        });
+
+        // Automatically fetch beats from beats.json
+        fetch('beats.json')
+            .then(response => response.json())
+            .then(data => {
+                beats = data;
+                renderBeats(beats);
+            })
+            .catch(err => {
+                console.error("Error loading beats.json:", err);
+            });
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
 
         function renderBeats(items) {
             const container = document.getElementById('beats-container');
             container.innerHTML = '';
 
-            if(items.length === 0) {
+            if(!items || items.length === 0) {
                 container.innerHTML = '<p class="text-gray-500 text-center py-8 text-sm">No beats found matching your search.</p>';
                 return;
             }
@@ -336,25 +358,27 @@
             items.forEach(beat => {
                 const el = document.createElement('div');
                 el.className = "bg-cardbg border border-gray-800/80 hover:border-gray-700 transition rounded-2xl p-4 flex items-center justify-between gap-4 group";
+                const beatPrice = beat.price ? Number(beat.price).toFixed(2) : "29.99";
+                
                 el.innerHTML = `
                     <div class="flex items-center space-x-4 min-w-0">
-                        <button onclick="playBeat(${beat.id})" class="w-12 h-12 rounded-xl bg-gray-900 border border-gray-800 group-hover:border-accent text-accent flex items-center justify-center flex-shrink-0 transition">
+                        <button onclick="playBeat('${beat.id}')" class="w-12 h-12 rounded-xl bg-gray-900 border border-gray-800 group-hover:border-accent text-accent flex items-center justify-center flex-shrink-0 transition">
                             <i id="btn-icon-${beat.id}" class="fa-solid fa-play text-sm"></i>
                         </button>
                         <div class="min-w-0">
-                            <h4 class="text-white font-bold text-sm truncate">${beat.title}</h4>
+                            <h4 class="text-white font-bold text-sm truncate">${beat.title || beat.name}</h4>
                             <div class="flex items-center space-x-3 text-xs text-gray-400 mt-0.5">
-                                <span class="text-purple-400 font-medium">${beat.genre}</span>
+                                <span class="text-purple-400 font-medium">${beat.genre || 'Hip-Hop'}</span>
                                 <span>•</span>
-                                <span>${beat.bpm} BPM</span>
+                                <span>${beat.bpm || '---'} BPM</span>
                                 <span>•</span>
-                                <span>Key: ${beat.key}</span>
+                                <span>Key: ${beat.key || '---'}</span>
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4 flex-shrink-0">
-                        <span class="text-white font-bold text-sm sm:text-base">$${beat.price.toFixed(2)}</span>
-                        <button onclick="openLicenseModal(${beat.id})" class="px-4 py-2 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-semibold transition">
+                        <span class="text-white font-bold text-sm sm:text-base">$${beatPrice}</span>
+                        <button onclick="openLicenseModal('${beat.id}')" class="px-4 py-2 rounded-xl bg-accent hover:bg-accenthover text-white text-xs sm:text-sm font-semibold transition">
                             Buy / License
                         </button>
                     </div>
@@ -368,8 +392,10 @@
             const genre = document.getElementById('genre-filter').value;
 
             const filtered = beats.filter(b => {
-                const matchesQuery = b.title.toLowerCase().includes(query);
-                const matchesGenre = (genre === 'all' || b.genre === genre);
+                const title = (b.title || b.name || '').toLowerCase();
+                const beatGenre = b.genre || '';
+                const matchesQuery = title.includes(query);
+                const matchesGenre = (genre === 'all' || beatGenre === genre);
                 return matchesQuery && matchesGenre;
             });
 
@@ -377,49 +403,58 @@
         }
 
         function playBeat(id) {
-            const beat = beats.find(b => b.id === id);
+            const beat = beats.find(b => String(b.id) === String(id));
             if(!beat) return;
 
-            currentBeat = beat;
-            isPlaying = true;
-            currentProgress = 0;
-
             document.getElementById('player-bar').classList.remove('hidden');
-            document.getElementById('player-title').innerText = beat.title;
-            document.getElementById('player-genre').innerText = `${beat.genre} • ${beat.bpm} BPM`;
-            document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
+            document.getElementById('player-title').innerText = beat.title || beat.name;
+            document.getElementById('player-genre').innerText = `${beat.genre || 'Hip-Hop'} • ${beat.bpm || '---'} BPM`;
 
-            if(progressInterval) clearInterval(progressInterval);
-            progressInterval = setInterval(() => {
-                currentProgress += 1;
-                if(currentProgress > 30) currentProgress = 0;
-                const pct = (currentProgress / 30) * 100;
-                document.getElementById('progress-bar').style.width = pct + '%';
-                
-                let mins = Math.floor(currentProgress / 60);
-                let secs = currentProgress % 60;
-                document.getElementById('current-time').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            }, 1000);
+            if (currentBeat && String(currentBeat.id) === String(beat.id)) {
+                togglePlay();
+                return;
+            }
+
+            currentBeat = beat;
+            const audioPath = beat.file || beat.audio || beat.path || `${beat.title || beat.name}.mp3`;
+            audio.src = audioPath;
+            audio.play().then(() => {
+                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
+            }).catch(err => {
+                console.warn("Audio playback issue: Ensure file exists at " + audioPath);
+            });
         }
 
         function togglePlay() {
-            if(!currentBeat) {
+            if (!currentBeat && beats.length > 0) {
                 playBeat(beats[0].id);
                 return;
             }
-            isPlaying = !isPlaying;
-            const icon = document.getElementById('play-icon');
-            if(isPlaying) {
-                icon.className = "fa-solid fa-pause text-sm";
+
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             } else {
-                icon.className = "fa-solid fa-play text-sm";
+                audio.pause();
+                document.getElementById('play-icon').className = "fa-solid fa-play text-sm";
             }
         }
 
+        function seekAudio(e) {
+            if (!audio.duration) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        }
+
+        function setVolume(val) {
+            audio.volume = val;
+        }
+
         function openLicenseModal(id) {
-            activeModalBeat = beats.find(b => b.id === id);
+            activeModalBeat = beats.find(b => String(b.id) === String(id));
             if(!activeModalBeat) return;
-            document.getElementById('modal-beat-title').innerText = `License: ${activeModalBeat.title}`;
+            document.getElementById('modal-beat-title').innerText = `License: ${activeModalBeat.title || activeModalBeat.name}`;
             document.getElementById('license-modal').classList.remove('hidden');
         }
 
@@ -435,7 +470,7 @@
         function confirmLicensePurchase() {
             if(!activeModalBeat) return;
             cart.push({
-                name: `${activeModalBeat.title} (${selectedLicenseType})`,
+                name: `${activeModalBeat.title || activeModalBeat.name} (${selectedLicenseType})`,
                 price: selectedLicensePrice
             });
             updateCartUI();
@@ -500,9 +535,6 @@
 
             alert("Connecting to Stripe Checkout for items:\n" + cart.map(i => `- ${i.name} ($${i.price})`).join("\n"));
         }
-
-        // Initialize beat list on page load
-        renderBeats(beats);
     </script>
 </body>
 </html>
