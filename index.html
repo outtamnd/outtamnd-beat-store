@@ -294,8 +294,6 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
-
         const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
 
         let beats = [];
@@ -305,9 +303,8 @@
         let selectedLicenseType = 'MP3 Lease';
         let selectedLicensePrice = 25.00;
 
-        // HTML5 Audio Engine Instance with mobile-friendly properties
+        // HTML5 Audio Engine Instance
         const audio = new Audio();
-        audio.preload = 'auto';
 
         audio.addEventListener('timeupdate', () => {
             if (audio.duration) {
@@ -433,15 +430,14 @@
 
             currentBeat = beat;
             
-            // Use relative path directly for mobile compatibility
-            const audioPath = beat.file;
+            // Properly encode path segments so mobile browsers can read files with spaces/symbols
+            const encodedPath = beat.file.split('/').map(segment => encodeURIComponent(segment)).join('/');
 
-            audio.src = audioPath;
-            audio.load();
+            audio.src = encodedPath;
             audio.play().then(() => {
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
-                console.warn("Mobile audio playback blocked or file missing:", err);
+                console.warn("Mobile audio playback error:", err);
             });
         }
 
