@@ -37,8 +37,8 @@
 </head>
 <body class="bg-darkbg text-gray-100 min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white">
 
-    <!-- Native HTML5 Audio Element for Mobile & PC Compatibility -->
-    <audio id="html-audio-element" preload="auto"></audio>
+    <!-- Native Audio Element for Mobile/Web Browser Compatibility -->
+    <audio id="html-audio-element" preload="none"></audio>
 
     <!-- Top Navigation -->
     <header class="sticky top-0 z-40 bg-darkbg/90 backdrop-blur-md border-b border-gray-800">
@@ -297,8 +297,12 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
+        const stripe = Stripe('pk_live_51UTWZIPaFUlsYooP06FGb2XiPMpagGuRMwNRlpWkGvS4F8w7tHcDu5IXr2n9yyvvGjNF1ZHUxiLAePXZAwm30UpT00kYlneWDl');
+
         const AUDIO_BASE_URL = 'https://outtamnd.github.io/';
+
+        // Live Stripe Payment Link
+        const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/cNi5kF9RP4DI2m0goB2kw00';
 
         let beats = [];
         let cart = [];
@@ -307,7 +311,7 @@
         let selectedLicenseType = 'MP3 Lease';
         let selectedLicensePrice = 25.00;
 
-        // Use the native DOM audio element for strict mobile & web browser compatibility
+        // Native DOM audio element for strict mobile browser policies
         const audio = document.getElementById('html-audio-element');
 
         audio.addEventListener('timeupdate', () => {
@@ -341,6 +345,7 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
+        // Helper to get text after dash and strip trailing BPM numbers for display
         function getDisplayTitle(fullTitle) {
             const dashIdx = fullTitle.indexOf('-');
             let cleanTitle = fullTitle;
@@ -350,6 +355,7 @@
                 cleanTitle = fullTitle.trim();
             }
             
+            // Remove trailing BPM numbers if present at the end
             const words = cleanTitle.split(' ');
             if (words.length > 1) {
                 const lastWord = words[words.length - 1];
@@ -385,7 +391,7 @@
                             <h4 class="text-white font-bold text-sm truncate">${displayTitle}</h4>
                             <div class="flex items-center space-x-3 text-xs text-gray-400 mt-0.5">
                                 <span class="text-purple-400 font-medium uppercase">${beat.genre}</span>
-                                <span class="text-gray-600">•</span>
+                                <span>•</span>
                                 <span>${beat.bpm} BPM</span>
                             </div>
                         </div>
@@ -438,15 +444,18 @@
             let rawFile = (beat.file || '').replace(/\\/g, '/');
             if (rawFile.startsWith('/')) rawFile = rawFile.substring(1);
 
-            const encodedFile = rawFile.split('/').map(segment => encodeURIComponent(segment)).join('/');
-            const audioPath = AUDIO_BASE_URL + encodedFile;
+            let audioPath = rawFile;
+            if (!rawFile.startsWith('http://') && !rawFile.startsWith('https://')) {
+                const encodedFile = rawFile.split('/').map(segment => encodeURIComponent(segment)).join('/');
+                audioPath = AUDIO_BASE_URL + encodedFile;
+            }
 
             audio.src = audioPath;
             audio.load();
             audio.play().then(() => {
                 document.getElementById('play-icon').className = "fa-solid fa-pause text-sm";
             }).catch(err => {
-                console.warn("Playback error:", err);
+                console.warn("Audio playback issue: Ensure file exists at " + audioPath, err);
             });
         }
 
@@ -560,6 +569,8 @@
                 alert("Your cart is empty!");
                 return;
             }
+
+            // Redirects to live Stripe payment link
             window.location.href = STRIPE_CHECKOUT_URL;
         }
     </script>
